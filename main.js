@@ -6,8 +6,11 @@ import { MapControls } from 'three/addons/controls/MapControls.js';
 import * as GUI from 'datgui';
 import { GraphicalModel } from './graphicalModel.js';
 import { GameTech } from './techTree.js';
+import { getSimModels } from './worldsimModels.js';
+
 
 const techTree = GameTech();	
+const simModels = getSimModels();
 
 const loader = new THREE.TextureLoader();
 const bmlloader = new THREE.ImageBitmapLoader();
@@ -145,9 +148,7 @@ scene.add(techTreeUi);
 		
 		const matLine = new THREE.LineBasicMaterial( {
 
-			color: 0xFF00000,
-			lineWidth: 10, 
-			//vertexColors: true,
+			color: 0xFF00000, 
 
 			dashed: false,
 			alphaToCoverage: true,
