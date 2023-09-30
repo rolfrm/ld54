@@ -70,8 +70,9 @@ function onPointerMove( event ) {
 }
 
 let windMill_model = GraphicalModel.Load('assets/windmill.gltf')
-windMill_model.scale = 0.5;
-windMill_model.offset = new THREE.Vector3(1.2,1.2,-0.1);
+windMill_model.scale = 0.2;
+let scaling = 0.2 / 0.5;
+windMill_model.offset = new THREE.Vector3(1.2 * scaling,1.2 * scaling,-0.2 * scaling) ;
 
 let coalPower_model = GraphicalModel.Load('assets/smoke.gltf')
 coalPower_model.scale = 0.4;
@@ -205,6 +206,7 @@ gui_model['Tree'] = function(){
 	setPlaceModel(tree_model);
 };
 const gui = new GUI.GUI()
+
 const cubeFolder = gui.addFolder('Build')
 cubeFolder.add(gui_model, "Wind Mill");
 cubeFolder.add(gui_model, "Coal Plant");
@@ -214,7 +216,9 @@ cubeFolder.open()
 
 
 function onDocumentMouseDown( event ) {
-
+	if (event.target.localName != "canvas") {
+        return;
+    }
 	event.preventDefault();
 	if(placeModel != null){
 		let newModel = placeModel.CreateInstance();
@@ -268,4 +272,17 @@ function animate(time) {
 	sim.timestep(time, []);
 }
 window.addEventListener( 'pointermove', onPointerMove );
+
+function onDocumentKeyDown(event) {
+    var keyCode = event.which;
+	
+    // up
+    if (keyCode == 27) {
+		setPlaceModel(null);
+	}
+}
+
+document.addEventListener("keydown", onDocumentKeyDown, false);
+
+
 animate(0.0);
