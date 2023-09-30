@@ -1,5 +1,5 @@
 import * as THREE from 'three';
-import { AsciiEffect } from 'three/addons/effects/AsciiEffect.js';
+import { WorldSimulator } from 'worldsim';
 
 const loader = new THREE.TextureLoader();
 const displacement = loader.load('assets/map1-64x64.png');
@@ -96,6 +96,8 @@ camera.lookAt(new THREE.Vector3(10,0,10));
 camera.position.z = -10;
 camera.position.x = -10;
 
+let sim = new WorldSimulator(64, 64, {});
+
 function animate(time) {
 	requestAnimationFrame( animate );
 	renderer.render( scene, camera );
@@ -105,8 +107,7 @@ function animate(time) {
 	directionalLight.position.set( Math.sin(time * 0.002) * 32, Math.cos(time * 0.002) * 32, 20 );
 	directionalLight.lookAt(new THREE.Vector3(0,0,0))
 	
-
-
+	sim.timestep(time, []);
 }
 
 animate(0.0);
