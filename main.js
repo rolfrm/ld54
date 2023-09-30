@@ -106,7 +106,7 @@ gltfLoader.load( 'assets/windmill.gltf', function ( gltf ) {
 const aspect = window.innerWidth / window.innerHeight;
 const frustumSize = 30;
 const scene = new THREE.Scene();
-const camera = new THREE.OrthographicCamera( frustumSize * aspect / - 2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / - 2, -1000, 1000 );
+const camera = new THREE.OrthographicCamera( frustumSize * aspect / - 2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / - 2, 0.01, 1000 );
 
 const mapPng = bmlloader.load('assets/map1-64x64.png', bitmapLoaded);
 
@@ -120,7 +120,7 @@ const material = new THREE.MeshStandardMaterial( { color: 0x00ffff } );
 
 
 const waterGeometry = new THREE.BoxGeometry( 100, 0.1, 100 );
-const waterMaterial = new THREE.MeshStandardMaterial( { color: 0x4444FF } );
+const waterMaterial = new THREE.MeshStandardMaterial( { color: 0x444444 } );
 waterMaterial.opacity = 0.75;
 waterMaterial.transparent = true;
 const water = new THREE.Mesh(waterGeometry, waterMaterial);
@@ -154,8 +154,8 @@ scene.add( ambientLight );
 
 //document.body.appendChild( effect.domElement );
 
-camera.position.y = 10;
-camera.lookAt(new THREE.Vector3(10,0,10));
+camera.position.y = 100;
+camera.lookAt(new THREE.Vector3(100,0,100));
 camera.position.z = -10;
 camera.position.x = -10;
 
@@ -177,7 +177,7 @@ let gui_model = {
 
 function setPlaceModel(model){
 	if(placeModel != null){
-		scene.remove(model.model);
+		scene.remove(placeModelInstance	.model);
 	}
 	placeModel = model;
 	if(model == null){
@@ -205,6 +205,23 @@ cubeFolder.add(gui_model, "Solar Cells");
 cubeFolder.open()
 //
 
+function onDocumentMouseDown( event ) {
+
+	event.preventDefault();
+	if(placeModel != null){
+		let newModel = placeModel.CreateInstance();
+		newModel.model.position.x =placeModelInstance.model.position.x;
+		newModel.model.position.y =placeModelInstance.model.position.y;
+		newModel.model.position.z =placeModelInstance.model.position.z;
+		scene.add(newModel.model);
+		mixers.push(newModel.mixer);
+		setPlaceModel(null);
+	}
+  
+  }
+
+  document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+    
 
 let sim = new WorldSimulator(64, 64, {});
 const clock = new THREE.Clock();
@@ -225,12 +242,8 @@ function animate(time) {
 			if(intersect.distance > dist) continue;
 			dist = intersect.distance;
 			let v = intersect.point;
-			placeModelInstance.model.position.set(v.x, v.y, v.z);
-		
-
+			placeModelInstance.model.position.set(Math.round(v.x), v.y, Math.round(v.z));
 		}
-		
-
 	}
 	
 
