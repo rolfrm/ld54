@@ -1,8 +1,12 @@
 import * as THREE from 'three';
 import { WorldSimulator } from 'worldsim';
+import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 
 const loader = new THREE.TextureLoader();
 const bmlloader = new THREE.ImageBitmapLoader();
+const gltfLoader = new GLTFLoader();
+
+						
 
 function getTextureData(texture) {
 	// Assuming you have a texture named 'yourTexture' in your scene
@@ -42,10 +46,37 @@ function bitmapLoaded(bmp){
 			scene.add( cube );
 			cube.castShadow = true;
 			cube.receiveShadow = true;
+			
 		}
 	}
 }
 
+let mixer = null;
+let activeAction = null;
+gltfLoader.load( 'assets/windmill.gltf', function ( gltf ) {
+	let model = gltf.scene;
+	model.castShadow = true;
+	model.receiveShadow = true;
+	model.position.y = 9.5;
+	model.position.z = -2;
+	model.children.forEach((child) => {
+		child.castShadow = true;
+		child.receiveShadow = true;
+	});
+
+	mixer = new THREE.AnimationMixer(gltf.scene)
+
+	const animationAction = mixer.clipAction(gltf.animations[0]).play();
+	const animationAction2 = mixer.clipAction(gltf.animations[1]).play();
+	//animationActions.push(animationAction)
+	//animationsFolder.add(animations, 'default')
+	//activeAction = animationActions[0]
+
+
+	scene.add( model );
+	
+
+} );
 
 
 const aspect = window.innerWidth / window.innerHeight;
@@ -106,12 +137,14 @@ camera.position.z = -10;
 camera.position.x = -10;
 
 let sim = new WorldSimulator(64, 64, {});
-
+const clock = new THREE.Clock();
 function animate(time) {
 	requestAnimationFrame( animate );
 	renderer.render( scene, camera );
 	water.position.y = Math.sin(time * 0.002) * 1.0 + 0.5;
-	
+	if(mixer != null){
+		mixer.update(clock.getDelta());
+	}
 
 	//directionalLight.position.set( Math.sin(time * 0.002) * 32, Math.cos(time * 0.002) * 32, 20 );
 	directionalLight.lookAt(new THREE.Vector3(0,0,0))

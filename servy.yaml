@@ -9,7 +9,7 @@ endpoints:
   "/.*\\.js$":
     call: dash -c "cat .$URL"
     response-type: text/javascript
-  "/assets/map1-64x64.png$":
+  "/assets/.*$":
     call: dash -c "cat .$URL"
 variables:
   C: 10
