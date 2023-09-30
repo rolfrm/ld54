@@ -7,8 +7,8 @@ class TechNode{
         this.cost = 0;
     }
     isSatisifed(setOfNodes){
-        for(req of this.requirements){
-            if(!(req in setOfNodes)){
+        for(let req of this.requirements){
+            if(!(setOfNodes.has(req))){
                 return false;
             }
         }
@@ -19,19 +19,19 @@ class TechNode{
 class TechTree{
     constructor(nodes){
         this.allNodes = nodes
-        this.acquiredNodes = {}
+        this.acquiredNodes = new Map();
     }
 
     AcquireTech(node){
-        this.acquiredNodes[node] = true;
+        this.acquiredNodes.set(node, true)
     }
 
     GetAvailableNodes(){
-        result = []
-        for(x of this.allNodes){
+        let result = []
+        for(let node of this.allNodes){
             
-            if(!(x in this.acquiredNodes) && x.isSatisifed(this.acquiredNodes)){
-                result.push(x);
+            if(!this.acquiredNodes.has(node) && node.isSatisifed(this.acquiredNodes)){
+                result.push(node);
             }
                 
             continue;

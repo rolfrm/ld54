@@ -10,6 +10,11 @@ import { getSimModels } from './worldsimModels.js';
 
 
 const techTree = GameTech();	
+for(let techNode of techTree.allNodes){
+	if(techNode.cost == 0){
+		techTree.AcquireTech(techNode);
+	}
+}
 const simModels = getSimModels();
 
 const loader = new THREE.TextureLoader();
@@ -62,23 +67,21 @@ function bitmapLoaded(bmp){
 	}
 }
 
+// for raycasting into the scene.
 const raycaster = new THREE.Raycaster();
 const pointer = new THREE.Vector2();
 
 function onPointerMove( event ) {
-
-	// calculate pointer position in normalized device coordinates
-	// (-1 to +1) for both components
-
 	pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
 	pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
-
 }
 
 let windMill_model = GraphicalModel.Load('assets/windmill.gltf')
 windMill_model.scale = 0.2;
 let scaling = 0.2 / 0.5;
 windMill_model.offset = new THREE.Vector3(1.2 * scaling,1.2 * scaling,-0.2 * scaling) ;
+
+let windMill2_model = GraphicalModel.Load('assets/windmill2.gltf')
 
 let coalPower_model = GraphicalModel.Load('assets/smoke.gltf')
 coalPower_model.scale = 0.4;
@@ -138,18 +141,22 @@ const water = new THREE.Mesh(waterGeometry, waterMaterial);
 scene.add( water );
 
 const techTreeUi = new THREE.Mesh();
+const nodeMaterial = new THREE.MeshStandardMaterial( { color: 0x222222 } );
+const selectedNodeMaterial = new THREE.MeshStandardMaterial( { color: 0x66FF66 } );
+const availableNodeMaterial = new THREE.MeshStandardMaterial( { color: 0xFFFF44 } );
+const acquiredTechMaterial = new THREE.MeshStandardMaterial( { color: 0x666666 } );
+let highLightedNode = null;
 scene.add(techTreeUi);
 {
 	for (const tech of techTree.allNodes) {
 		let cube = new THREE.BoxGeometry(1, 1, 1);
 		
 		
-		const nodeMaterial = new THREE.MeshStandardMaterial( { color: 0xFF00000 } );
+		
 		
 		const matLine = new THREE.LineBasicMaterial( {
 
 			color: 0xFF00000, 
-
 			dashed: false,
 			alphaToCoverage: true,
 
@@ -158,6 +165,7 @@ scene.add(techTreeUi);
 
 
 		let nodeUi = new THREE.Mesh(cube, nodeMaterial);
+		nodeUi.tech = tech;
 		nodeUi.position.x = tech.pos[0] * 1.1;
 		nodeUi.position.z = tech.pos[1] * 1.1;
 		nodeUi.position.y = 20;
@@ -174,9 +182,11 @@ scene.add(techTreeUi);
 			
 			techTreeUi.add(line);
 		}
+		nodeUi.is_tech_node = true;
 		
 		techTreeUi.add(nodeUi);
 	}
+	techTreeUi.is_tech_node = true;
 }
 
 // light
@@ -240,6 +250,9 @@ gui_model['Coal Plant'] = function(){
 gui_model['Wind Mill'] = function(){
 	setPlaceModel(windMill_model);
 };
+gui_model['Wind Mill2'] = function(){
+	setPlaceModel(windMill2_model);
+};
 gui_model['Solar Cells'] = function(){
 
 };
@@ -256,12 +269,14 @@ const gui = new GUI.GUI()
 
 const cubeFolder = gui.addFolder('Build')
 cubeFolder.add(gui_model, "Wind Mill");
+cubeFolder.add(gui_model, "Wind Mill2");
 cubeFolder.add(gui_model, "Coal Plant");
 cubeFolder.add(gui_model, "Solar Cells");
 cubeFolder.add(gui_model, "Tree");
 cubeFolder.add(gui_model, "Town");
 cubeFolder.add(gui_model, "City");
 cubeFolder.open()
+const techFolder = gui.addFolder('Tech')
 
 const statsFolder = gui.addFolder('Stats');
 
@@ -279,7 +294,23 @@ function onDocumentMouseDown( event ) {
 	if (event.target.localName != "canvas") {
         return;
     }
+
+
 	event.preventDefault();
+	if(highLightedNode != null){
+		//techFolder.clear();
+		if(techFolder.clear != undefined){
+			techFolder.clear();
+		}
+		let a = techFolder.add(highLightedNode, "name")
+		let b = techFolder.add(highLightedNode, "cost")
+		techFolder.clear = () => {
+			techFolder.remove(a);
+			techFolder.remove(b);
+		}
+		//alert("Tech node clicked!");
+		return;
+	}
 	if(placeModel != null){
 		let newModel = placeModel.CreateInstance();
 		newModel.model.position.x =placeModelInstance.model.position.x;
@@ -305,7 +336,28 @@ function animate(time) {
 	// calculate objects intersecting the picking ray
 	const intersects = raycaster.intersectObjects( scene.children );
 	let dist = 10000.0;
+	let availableTech = techTree.GetAvailableNodes();
+	for (let techNode of techTreeUi.children){
+		if(availableTech.includes(techNode.tech)){
+			techNode.material = availableNodeMaterial;
+		}else if(techTree.acquiredNodes.has(techNode.tech)){
+			techNode.material = acquiredTechMaterial;
+		}else{
+			techNode.material = nodeMaterial;
+		}
+	}
+	for(let intersect of intersects){
+		if(intersect.object.is_tech_node == true){
+			intersect.object.material = selectedNodeMaterial;
+			highLightedNode = intersect.object.tech;
+			
+			break;
+		}
+	}
+	
 	if(placeModelInstance != null){
+		
+		
 		for(let intersect of intersects){
 			if(intersect.object.box != true)
 				continue;

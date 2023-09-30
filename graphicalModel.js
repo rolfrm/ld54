@@ -13,11 +13,14 @@ class GraphicalModel {
             let model = gltf.scene;
             model.castShadow = true;
             model.receiveShadow = true;
-            model.children.forEach((child) => {
-                child.castShadow = true;
-                child.receiveShadow = true;
-            });
-        
+            
+            model.traverse((child) => {
+                if(child.isMesh){
+                    child.castShadow = true;
+                    child.receiveShadow = true;
+                }
+              })
+              
             modelBase.animations = gltf.animations;
             modelBase.model = model;
             modelBase.ready = true;
