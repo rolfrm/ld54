@@ -53,25 +53,48 @@ function bitmapLoaded(bmp){
 	}
 }
 
-let mixer = null;
-let activeAction = null;
+let mixers = [];
 gltfLoader.load( 'assets/windmill.gltf', function ( gltf ) {
 	let model = gltf.scene;
 	model.castShadow = true;
 	model.receiveShadow = true;
-	model.position.y = 9.5;
+	model.position.y = 8;
 	model.position.z = -2;
 	model.children.forEach((child) => {
 		child.castShadow = true;
 		child.receiveShadow = true;
 	});
 
-	mixer = new THREE.AnimationMixer(gltf.scene)
+	let mixer = new THREE.AnimationMixer(gltf.scene)
+	mixers.push(mixer);
 
-	const animationAction = mixer.clipAction(gltf.animations[0]).play();
-	const animationAction2 = mixer.clipAction(gltf.animations[1]).play();
+	mixer.clipAction(gltf.animations[0].clone()).play();
+	mixer.clipAction(gltf.animations[1].clone()).play();
 	
+	model.scale.set(0.5, 0.5, 0.5);
 	scene.add( model );
+
+	let model2 = model.clone();
+	scene.add(model2);
+	model2.position.z -= 5;
+	model2.position.y += 1;
+
+	mixer = new THREE.AnimationMixer(model2)
+	mixers.push(mixer);
+
+	mixer.clipAction(gltf.animations[0]).play();
+	mixer.clipAction(gltf.animations[1]).play();
+	
+	model2 = model.clone();
+	scene.add(model2);
+	model2.position.z -= 8;
+	model2.position.y += 1.8;
+	mixer = new THREE.AnimationMixer(model2)
+	mixers.push(mixer);
+
+	mixer.clipAction(gltf.animations[0]).play();
+	mixer.clipAction(gltf.animations[1]).play();
+	
 	
 
 } );
@@ -146,13 +169,22 @@ controls.maxPolarAngle = Math.PI / 2;
 
 // GUI
 let gui_model = {
-	windMill: function(self){
-		alert("build wind mill!");
-	}
+	
 }
+gui_model['Coal Plant'] = function(){
+	
+};
+gui_model['Wind Mill'] = function(){
+
+};
+gui_model['Solar Cells'] = function(){
+
+};
 const gui = new GUI.GUI()
 const cubeFolder = gui.addFolder('Build')
-cubeFolder.add(gui_model, "windMill");
+cubeFolder.add(gui_model, "Wind Mill");
+cubeFolder.add(gui_model, "Coal Plant");
+cubeFolder.add(gui_model, "Solar Cells");
 cubeFolder.open()
 //
 
@@ -161,12 +193,12 @@ let sim = new WorldSimulator(64, 64, {});
 const clock = new THREE.Clock();
 
 function animate(time) {
+	let delta = clock.getDelta();
 	requestAnimationFrame( animate );
 	renderer.render( scene, camera );
 	water.position.y = Math.sin(time * 0.002) * 0.2 + 4;
-	if(mixer != null){
-		mixer.update(clock.getDelta());
-	}
+	mixers.forEach((mixer) => mixer.update(delta))
+	
 	controls.update();
 	//directionalLight.position.set( Math.sin(time * 0.002) * 32, Math.cos(time * 0.002) * 32, 20 );
 	directionalLight.lookAt(new THREE.Vector3(0,0,0))
