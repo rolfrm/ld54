@@ -7,12 +7,13 @@ class SimModel{
         this.emission = 0.0;
         this.production = 0.0;
         this.reduction = 0.0;
+        this.revenue = 0.0;
     }
 }
 
 function getSimModels(){
-    let town = {name: "Town 1", consumption: 1.0, cost: 20.0, emission: 1.0};
-    let city = {name: "City 1", consumption: 10.0, cost: 200.0, emission: 8.0};
+    let town = {name: "Town 1", consumption: 1.0, revenue: 1, cost: 20.0, emission: 1.0};
+    let city = {name: "City 1", consumption: 10.0, revenue: 4, cost: 200.0, emission: 8.0};
     let coalPlant1 = {name: "Coal 1", production: 10.0, cost: 10.0,  emission: 10.0};
     let coalPlant2 = {name: "Coal 2", production: 20.0, cost: 15.0,  emission: 19.0};
     let windmill1 = {name: "Wind Mill 1", production: 1.0, cost: 4.0, emission: 0.0};
