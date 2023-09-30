@@ -54,6 +54,9 @@ class WorldSimulator {
     temperatureRise = null;
     co2Level = null;
     wind = 0.0;
+    adjustedCo2Level = 0;
+    production = 0;
+    consumption = 0;
 
     constructor(width, height, simParameters) {
         this.#secondsPerHour = simParameters.secondsPerHour ?? 1.0;
@@ -77,20 +80,49 @@ class WorldSimulator {
         this.#lastDay = day;
         this.#lastHour = hour;
 
+        // Wind
+        this.wind = this.wind * 0.5 + Math.random() * 0.5;
+
+        this.income = 0.0;
+        let emissionsNow = 0.0;
+        let totalReduction = 0;
+        this.consumption = 0;
+        this.production = 0;
+        for(let construction of constructions){
+            let type = construction.type;
+            
+            emissionsNow += construction.type.emission;
+            totalReduction += construction.type.reduction;
+            if(type.windDriven){
+                this.production += construction.type.production * Math.min(1.0, this.wind);
+            }else{
+                this.production += construction.type.production;
+            }
+        }
+        
+        
+        for(let construction of constructions){
+            let type = construction.type;
+            if(this.consumption + type.consumption < this.production){
+                this.consumption += type.consumption;
+                this.income += type.revenue;
+            }
+        }
+
         // Update stuff
         this.funds += this.income * hourDiff;
 
         // CO2 + Temperature + Water level
-        this.co2Level.step(hourDiff, 0);
+        this.co2Level.step(hourDiff, emissionsNow);
 
         const tempRise = this.#co2LevelToTempRise(this.co2Level.amount);
         this.temperatureRise.step(hourDiff, tempRise);
         
         this.waterRise.step(hourDiff, this.temperatureRise.amount);
-        this.waterLevel = this.#startWaterLevel + this.waterRise.amount;
+        this.waterLevel = this.#startWaterLevel + this.waterRise.amount * 0.02;
 
-        // Wind
-        this.wind = this.wind * 0.5+ Math.pow(Math.random(), 3) * 0.5;
+        
+        this.adjustedCo2Level = this.co2Level.amount - totalReduction;
 
         console.log(this.co2Level.amount, this.temperatureRise.amount, this.waterLevel);
     }

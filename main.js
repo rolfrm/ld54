@@ -248,7 +248,9 @@ let gui_model = {
 	Production: 0,
 	"Water Level": 0,
 	Capacity: 0,
-	Storage: 0
+	Storage: 0,
+	Consumption: 0,
+	Wind: 0
 
 }
 
@@ -274,7 +276,7 @@ let views = []
 function addView(name){
 	views.push(statsFolder.add(gui_model, name))
 }
-for(name of ["Money", "CO2", "Temperature", "Water Level", "Production", "Storage", "Capacity"]){
+for(name of ["Money", "CO2", "Temperature", "Water Level", "Production", "Storage", "Capacity", "Consumption", "Wind"]){
 	addView(name)
 }
 statsFolder.open()
@@ -366,9 +368,12 @@ function animate(time) {
 			placeModelInstance.model.position.set(Math.round(v.x), v.y, Math.round(v.z));
 		}
 	}
-	gui_model.CO2 = sim.co2Level.amount;
+	gui_model.CO2 = sim.adjustedCo2Level;
 	gui_model.Temperature = sim.temperatureRise.amount
 	gui_model['Water Level'] = sim.waterRise.amount;
+	gui_model['Production'] = sim.production;
+	gui_model['Consumption'] = sim.consumption;
+	gui_model['Wind'] = sim.wind;
 	gui_model.Money = sim.funds;
 	for(let view of views){
 		view.updateDisplay();
