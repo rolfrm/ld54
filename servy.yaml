@@ -1,0 +1,16 @@
+#!servy
+endpoints:
+  
+  "/.*\\.svg$":
+    call: cat $URL
+    response-type: image/svg
+  ".*\\.html$":
+    call: dash -c "cat .$URL"
+  "/.*\\.js$":
+    call: dash -c "cat .$URL"
+    response-type: text/javascript
+
+variables:
+  C: 10
+host: http://localhost:8890 http://localhost:8891
+  `
