@@ -2,6 +2,8 @@ import * as THREE from 'three';
 import { WorldSimulator } from 'worldsim';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MapControls } from 'three/addons/controls/MapControls.js';
+import * as GUI from 'datgui';
+
 
 const loader = new THREE.TextureLoader();
 const bmlloader = new THREE.ImageBitmapLoader();
@@ -141,6 +143,18 @@ controls.screenSpacePanning = false;
 //controls.maxDistance = 500;
 
 controls.maxPolarAngle = Math.PI / 2;
+
+// GUI
+let gui_model = {
+	windMill: function(self){
+		alert("build wind mill!");
+	}
+}
+const gui = new GUI.GUI()
+const cubeFolder = gui.addFolder('Build')
+cubeFolder.add(gui_model, "windMill");
+cubeFolder.open()
+//
 
 
 let sim = new WorldSimulator(64, 64, {});
