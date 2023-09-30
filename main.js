@@ -8,6 +8,7 @@ import { GraphicalModel } from './graphicalModel.js';
 import { GameTech } from './techTree.js';
 import { getSimModels } from './worldsimModels.js';
 
+let level = [];
 
 const techTree = GameTech();	
 for(let techNode of techTree.allNodes){
@@ -76,28 +77,37 @@ function onPointerMove( event ) {
 	pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
 }
 
-let windMill_model = GraphicalModel.Load('assets/windmill.gltf')
+let windMill_model = GraphicalModel.Load('assets/windmill.gltf', 'Wind Mill 1')
+
 windMill_model.scale = 0.2;
 let scaling = 0.2 / 0.5;
 windMill_model.offset = new THREE.Vector3(1.2 * scaling,1.2 * scaling,-0.2 * scaling) ;
 
-let windMill2_model = GraphicalModel.Load('assets/windmill2.gltf')
+let windMill2_model = GraphicalModel.Load('assets/windmill2.gltf', 'Wind Mill 2')
 
-let coalPower_model = GraphicalModel.Load('assets/smoke.gltf')
+let coalPower_model = GraphicalModel.Load('assets/smoke.gltf', 'Coal 1')
 coalPower_model.scale = 0.4;
 coalPower_model.offset = new THREE.Vector3(-0.4,0.45,-0.35);
 
-let tree_model = GraphicalModel.Load('assets/tree.gltf')
+let coalPower2_model = GraphicalModel.Load('assets/smoke.gltf', 'Coal 2')
+coalPower2_model.scale = 0.4;
+coalPower2_model.offset = new THREE.Vector3(-0.4,0.45,-0.35);
+
+
+let tree_model = GraphicalModel.Load('assets/tree.gltf', 'Tree 1')
 tree_model.scale = 0.25;
 tree_model.offset = new THREE.Vector3(-0.1,0.5,-0.1);
 
-let town_model = GraphicalModel.Load('assets/town.gltf')
+let town_model = GraphicalModel.Load('assets/town.gltf', 'Town 1')
 town_model.scale = 0.3;
 //town_model.offset = new THREE.Vector3(-0.1,0.5,-0.1);
-let city_model = GraphicalModel.Load('assets/city.gltf')
+let city_model = GraphicalModel.Load('assets/city.gltf', 'City 1')
 city_model.scale = 0.5;
 
-
+let game_models = [windMill_model, windMill2_model, coalPower_model, coalPower2_model, tree_model, town_model, city_model];
+for(let model of game_models){
+	model.tech = simModels[model.name];
+}
 let placeModel = null;
 let placeModelInstance = null;
 
@@ -242,39 +252,19 @@ let gui_model = {
 
 }
 
+for(let x of game_models){
+	gui_model[x.name] = function(){
+		setPlaceModel(x);
+	};	
+}
 
-
-gui_model['Coal Plant'] = function(){
-	setPlaceModel(coalPower_model);
-};
-gui_model['Wind Mill'] = function(){
-	setPlaceModel(windMill_model);
-};
-gui_model['Wind Mill2'] = function(){
-	setPlaceModel(windMill2_model);
-};
-gui_model['Solar Cells'] = function(){
-
-};
-gui_model['Tree'] = function(){
-	setPlaceModel(tree_model);
-};
-gui_model['Town'] = function(){
-	setPlaceModel(town_model);
-};
-gui_model['City'] = function(){
-	setPlaceModel(city_model);
-};
 const gui = new GUI.GUI()
 
 const cubeFolder = gui.addFolder('Build')
-cubeFolder.add(gui_model, "Wind Mill");
-cubeFolder.add(gui_model, "Wind Mill2");
-cubeFolder.add(gui_model, "Coal Plant");
-cubeFolder.add(gui_model, "Solar Cells");
-cubeFolder.add(gui_model, "Tree");
-cubeFolder.add(gui_model, "Town");
-cubeFolder.add(gui_model, "City");
+for(let x of game_models){
+	cubeFolder.add(gui_model, x.name);
+
+}
 cubeFolder.open()
 const techFolder = gui.addFolder('Tech')
 
@@ -316,6 +306,12 @@ function onDocumentMouseDown( event ) {
 		newModel.model.position.x =placeModelInstance.model.position.x;
 		newModel.model.position.y =placeModelInstance.model.position.y;
 		newModel.model.position.z =placeModelInstance.model.position.z;
+
+		level.push({
+			type: placeModel.tech,
+			position: newModel.model.position
+		});
+
 		scene.add(newModel.model);
 		mixers.push(newModel.mixer);
 		setPlaceModel(null);
@@ -389,7 +385,7 @@ function animate(time) {
 	//directionalLight.position.set( Math.sin(time * 0.002) * 32, Math.cos(time * 0.002) * 32, 20 );
 	directionalLight.lookAt(new THREE.Vector3(0,0,0))
 	
-	sim.timestep(time, []);
+	sim.timestep(time, level);
 }
 window.addEventListener( 'pointermove', onPointerMove );
 

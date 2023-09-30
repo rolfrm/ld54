@@ -4,8 +4,9 @@ import * as THREE from 'three';
 const gltfLoader = new GLTFLoader();
 class GraphicalModel {
     
-    static Load(asset){
+    static Load(asset, name){
         let modelBase = new GraphicalModel ()
+        modelBase.name = name;
         modelBase.model = null;
         modelBase.animations = [];
         modelBase.ready = false;
