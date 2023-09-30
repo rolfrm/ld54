@@ -77,6 +77,10 @@ let coalPower_model = GraphicalModel.Load('assets/smoke.gltf')
 coalPower_model.scale = 0.4;
 coalPower_model.offset = new THREE.Vector3(-0.4,0.45,-0.35);
 
+let tree_model = GraphicalModel.Load('assets/tree.gltf')
+tree_model.scale = 0.25;
+tree_model.offset = new THREE.Vector3(-0.1,0.5,-0.1);
+
 
 let placeModel = null;
 let placeModelInstance = null;
@@ -197,13 +201,17 @@ gui_model['Wind Mill'] = function(){
 gui_model['Solar Cells'] = function(){
 
 };
+gui_model['Tree'] = function(){
+	setPlaceModel(tree_model);
+};
 const gui = new GUI.GUI()
 const cubeFolder = gui.addFolder('Build')
 cubeFolder.add(gui_model, "Wind Mill");
 cubeFolder.add(gui_model, "Coal Plant");
 cubeFolder.add(gui_model, "Solar Cells");
+cubeFolder.add(gui_model, "Tree");
 cubeFolder.open()
-//
+
 
 function onDocumentMouseDown( event ) {
 
