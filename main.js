@@ -346,6 +346,7 @@ function animate(time) {
 			techNode.material = nodeMaterial;
 		}
 	}
+	highLightedNode = null;
 	for(let intersect of intersects){
 		if(intersect.object.is_tech_node == true){
 			intersect.object.material = selectedNodeMaterial;
