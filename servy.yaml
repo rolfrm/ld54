@@ -9,7 +9,8 @@ endpoints:
   "/.*\\.js$":
     call: dash -c "cat .$URL"
     response-type: text/javascript
-
+  "/assets/map1-64x64.png$":
+    call: dash -c "cat .$URL"
 variables:
   C: 10
 host: http://localhost:8890 http://localhost:8891
