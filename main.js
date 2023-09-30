@@ -2,9 +2,12 @@ import * as THREE from 'three';
 import { WorldSimulator } from 'worldsim';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MapControls } from 'three/addons/controls/MapControls.js';
+//import { MeshLine, MeshLineMaterial, MeshLineRaycast } from 'three.meshline/THREE.meshline.js';
 import * as GUI from 'datgui';
 import { GraphicalModel } from './graphicalModel.js';
+import { GameTech } from './techTree.js';
 
+const techTree = GameTech();	
 
 const loader = new THREE.TextureLoader();
 const bmlloader = new THREE.ImageBitmapLoader();
@@ -37,15 +40,15 @@ function bitmapLoaded(bmp){
 	let h = imageData.width;
 	let wh = w * h;
 	let channels = imageData.data.length / wh;
-	for(let i = 0; i < h; i++){
-		for(let j = 0; j < w; j++){
-			let index = channels * (i * w + j);
+	for(let y = 0; y < h; y++){
+		for(let x = 0; x < w; x++){
+			let index = channels * (y * w + x);
 			const height = imageData.data[index + 1 ] / 256.0;
 			const geometry = new THREE.BoxGeometry( 1, height * 10.0, 1 );
 
 			const cube = new THREE.Mesh( geometry, material );
-			cube.position.x = i - h / 2;
-			cube.position.z = j - w / 2;
+			cube.position.x = y - h / 2;
+			cube.position.z = x - w / 2;
 			cube.position.y = height * 5;
 			scene.add( cube );
 			cube.castShadow = true;
@@ -81,6 +84,12 @@ coalPower_model.offset = new THREE.Vector3(-0.4,0.45,-0.35);
 let tree_model = GraphicalModel.Load('assets/tree.gltf')
 tree_model.scale = 0.25;
 tree_model.offset = new THREE.Vector3(-0.1,0.5,-0.1);
+
+let town_model = GraphicalModel.Load('assets/town.gltf')
+town_model.scale = 0.3;
+//town_model.offset = new THREE.Vector3(-0.1,0.5,-0.1);
+let city_model = GraphicalModel.Load('assets/city.gltf')
+city_model.scale = 0.5;
 
 
 let placeModel = null;
@@ -125,8 +134,49 @@ const water = new THREE.Mesh(waterGeometry, waterMaterial);
 
 scene.add( water );
 
+const techTreeUi = new THREE.Mesh();
+scene.add(techTreeUi);
+{
+	for (const tech of techTree.allNodes) {
+		let cube = new THREE.BoxGeometry(1, 1, 1);
+		
+		
+		const nodeMaterial = new THREE.MeshStandardMaterial( { color: 0xFF00000 } );
+		
+		const matLine = new THREE.LineBasicMaterial( {
+
+			color: 0xFF00000,
+			lineWidth: 10, 
+			//vertexColors: true,
+
+			dashed: false,
+			alphaToCoverage: true,
+
+		} );
 
 
+
+		let nodeUi = new THREE.Mesh(cube, nodeMaterial);
+		nodeUi.position.x = tech.pos[0] * 1.1;
+		nodeUi.position.z = tech.pos[1] * 1.1;
+		nodeUi.position.y = 20;
+
+		for (const req of tech.requirements) {
+			let start = new THREE.Vector3(req.pos[0] * 1.1, 20, req.pos[1] * 1.1);
+			const points = [];
+			points.push( nodeUi.position.clone() );
+			points.push( start);
+
+			const geometry = new THREE.BufferGeometry().setFromPoints( points );
+
+			const line = new THREE.Line( geometry, matLine );
+			
+			techTreeUi.add(line);
+		}
+		
+		techTreeUi.add(nodeUi);
+	}
+}
 
 // light
 const directionalLight = new THREE.DirectionalLight( 0xFFFFFF, 1.6 );
@@ -168,6 +218,7 @@ controls.screenSpacePanning = false;
 
 controls.maxPolarAngle = Math.PI / 2;
 
+
 // GUI
 let gui_model = {
 	Money: 1000,
@@ -194,6 +245,12 @@ gui_model['Solar Cells'] = function(){
 gui_model['Tree'] = function(){
 	setPlaceModel(tree_model);
 };
+gui_model['Town'] = function(){
+	setPlaceModel(town_model);
+};
+gui_model['City'] = function(){
+	setPlaceModel(city_model);
+};
 const gui = new GUI.GUI()
 
 const cubeFolder = gui.addFolder('Build')
@@ -201,6 +258,8 @@ cubeFolder.add(gui_model, "Wind Mill");
 cubeFolder.add(gui_model, "Coal Plant");
 cubeFolder.add(gui_model, "Solar Cells");
 cubeFolder.add(gui_model, "Tree");
+cubeFolder.add(gui_model, "Town");
+cubeFolder.add(gui_model, "City");
 cubeFolder.open()
 
 const statsFolder = gui.addFolder('Stats');
