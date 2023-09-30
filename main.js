@@ -1,12 +1,11 @@
 import * as THREE from 'three';
 import { WorldSimulator } from 'worldsim';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
+import { MapControls } from 'three/addons/controls/MapControls.js';
 
 const loader = new THREE.TextureLoader();
 const bmlloader = new THREE.ImageBitmapLoader();
 const gltfLoader = new GLTFLoader();
-
-						
 
 function getTextureData(texture) {
 	// Assuming you have a texture named 'yourTexture' in your scene
@@ -38,11 +37,12 @@ function bitmapLoaded(bmp){
 		for(let j = 0; j < w; j++){
 			let index = channels * (i * w + j);
 			const height = imageData.data[4 * (i * w + j + 1)] / 256.0;
-			const geometry = new THREE.BoxGeometry( 1, height * 20.0, 1 );
+			const geometry = new THREE.BoxGeometry( 1, height * 10.0, 1 );
 
 			const cube = new THREE.Mesh( geometry, material );
 			cube.position.x = i - h / 2;
 			cube.position.z = j - w / 2;
+			cube.position.y = height * 5;
 			scene.add( cube );
 			cube.castShadow = true;
 			cube.receiveShadow = true;
@@ -68,11 +68,7 @@ gltfLoader.load( 'assets/windmill.gltf', function ( gltf ) {
 
 	const animationAction = mixer.clipAction(gltf.animations[0]).play();
 	const animationAction2 = mixer.clipAction(gltf.animations[1]).play();
-	//animationActions.push(animationAction)
-	//animationsFolder.add(animations, 'default')
-	//activeAction = animationActions[0]
-
-
+	
 	scene.add( model );
 	
 
@@ -132,20 +128,32 @@ scene.add( ambientLight );
 
 camera.position.y = 10;
 camera.lookAt(new THREE.Vector3(10,0,10));
-
 camera.position.z = -10;
 camera.position.x = -10;
 
+const controls = new MapControls( camera, renderer.domElement );
+controls.enableDamping = true; // an animation loop is required when either damping or auto-rotation are enabled
+controls.dampingFactor = 0.05;
+
+controls.screenSpacePanning = false;
+
+//controls.minDistance = 100;
+//controls.maxDistance = 500;
+
+controls.maxPolarAngle = Math.PI / 2;
+
+
 let sim = new WorldSimulator(64, 64, {});
 const clock = new THREE.Clock();
+
 function animate(time) {
 	requestAnimationFrame( animate );
 	renderer.render( scene, camera );
-	water.position.y = Math.sin(time * 0.002) * 1.0 + 0.5;
+	water.position.y = Math.sin(time * 0.002) * 0.2 + 4;
 	if(mixer != null){
 		mixer.update(clock.getDelta());
 	}
-
+	controls.update();
 	//directionalLight.position.set( Math.sin(time * 0.002) * 32, Math.cos(time * 0.002) * 32, 20 );
 	directionalLight.lookAt(new THREE.Vector3(0,0,0))
 	
