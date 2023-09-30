@@ -85,6 +85,20 @@ tree_model.offset = new THREE.Vector3(-0.1,0.5,-0.1);
 
 let placeModel = null;
 let placeModelInstance = null;
+
+function setPlaceModel(model){
+	if(placeModel != null){
+		scene.remove(placeModelInstance	.model);
+	}
+	placeModel = model;
+	if(model == null){
+		placeModelInstance = null;
+	}else{
+		placeModelInstance = model.CreateInstance();
+		scene.add(placeModelInstance.model);
+	}
+}
+
 let mixers = [];
 gltfLoader.load( 'assets/windmill.gltf', function ( gltf ) {
 	let model = gltf.scene;
@@ -177,21 +191,17 @@ controls.maxPolarAngle = Math.PI / 2;
 
 // GUI
 let gui_model = {
-	
+	Money: 1000,
+	CO2: 500,
+	Temperature: 0.0,
+	Production: 0,
+	"Water Level": 0,
+	Capacity: 0,
+	Storage: 0
+
 }
 
-function setPlaceModel(model){
-	if(placeModel != null){
-		scene.remove(placeModelInstance	.model);
-	}
-	placeModel = model;
-	if(model == null){
-		placeModelInstance = null;
-	}else{
-		placeModelInstance = model.CreateInstance();
-		scene.add(placeModelInstance.model);
-	}
-}
+
 
 gui_model['Coal Plant'] = function(){
 	setPlaceModel(coalPower_model);
@@ -213,6 +223,17 @@ cubeFolder.add(gui_model, "Coal Plant");
 cubeFolder.add(gui_model, "Solar Cells");
 cubeFolder.add(gui_model, "Tree");
 cubeFolder.open()
+
+const statsFolder = gui.addFolder('Stats');
+
+let views = []
+function addView(name){
+	views.push(statsFolder.add(gui_model, name))
+}
+for(name of ["Money", "CO2", "Temperature", "Water Level", "Production", "Storage", "Capacity"]){
+	addView(name)
+}
+statsFolder.open()
 
 
 function onDocumentMouseDown( event ) {
@@ -257,12 +278,19 @@ function animate(time) {
 			placeModelInstance.model.position.set(Math.round(v.x), v.y, Math.round(v.z));
 		}
 	}
+	gui_model.CO2 = sim.co2Level.amount;
+	gui_model.Temperature = sim.temperatureRise.amount
+	gui_model['Water Level'] = sim.waterRise.amount;
+	gui_model.Money = sim.funds;
+	for(let view of views){
+		view.updateDisplay();
+	}
 	
 
 	let delta = clock.getDelta();
 	requestAnimationFrame( animate );
 	renderer.render( scene, camera );
-	water.position.y = Math.sin(time * 0.002) * 0.2 + 4;
+	water.position.y = sim.waterLevel;
 	mixers.forEach((mixer) => mixer.update(delta))
 	
 	controls.update();
