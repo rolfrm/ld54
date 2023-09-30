@@ -1,3 +1,4 @@
+
 class WorldSimulator {
     constructor(width, height, simParameters) {
 

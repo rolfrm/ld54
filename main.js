@@ -3,11 +3,13 @@ import { WorldSimulator } from 'worldsim';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { MapControls } from 'three/addons/controls/MapControls.js';
 import * as GUI from 'datgui';
+import { GraphicalModel } from './graphicalModel.js';
 
 
 const loader = new THREE.TextureLoader();
 const bmlloader = new THREE.ImageBitmapLoader();
 const gltfLoader = new GLTFLoader();
+
 
 function getTextureData(texture) {
 	// Assuming you have a texture named 'yourTexture' in your scene
@@ -38,7 +40,7 @@ function bitmapLoaded(bmp){
 	for(let i = 0; i < h; i++){
 		for(let j = 0; j < w; j++){
 			let index = channels * (i * w + j);
-			const height = imageData.data[4 * (i * w + j + 1)] / 256.0;
+			const height = imageData.data[index + 1 ] / 256.0;
 			const geometry = new THREE.BoxGeometry( 1, height * 10.0, 1 );
 
 			const cube = new THREE.Mesh( geometry, material );
@@ -48,11 +50,36 @@ function bitmapLoaded(bmp){
 			scene.add( cube );
 			cube.castShadow = true;
 			cube.receiveShadow = true;
+			cube.box = true;
 			
 		}
 	}
 }
 
+const raycaster = new THREE.Raycaster();
+const pointer = new THREE.Vector2();
+
+function onPointerMove( event ) {
+
+	// calculate pointer position in normalized device coordinates
+	// (-1 to +1) for both components
+
+	pointer.x = ( event.clientX / window.innerWidth ) * 2 - 1;
+	pointer.y = - ( event.clientY / window.innerHeight ) * 2 + 1;
+
+}
+
+let windMill_model = GraphicalModel.Load('assets/windmill.gltf')
+windMill_model.scale = 0.5;
+windMill_model.offset = new THREE.Vector3(1.2,1.2,-0.1);
+
+let coalPower_model = GraphicalModel.Load('assets/smoke.gltf')
+coalPower_model.scale = 0.4;
+coalPower_model.offset = new THREE.Vector3(-0.4,0.45,-0.35);
+
+
+let placeModel = null;
+let placeModelInstance = null;
 let mixers = [];
 gltfLoader.load( 'assets/windmill.gltf', function ( gltf ) {
 	let model = gltf.scene;
@@ -73,30 +100,6 @@ gltfLoader.load( 'assets/windmill.gltf', function ( gltf ) {
 	
 	model.scale.set(0.5, 0.5, 0.5);
 	scene.add( model );
-
-	let model2 = model.clone();
-	scene.add(model2);
-	model2.position.z -= 5;
-	model2.position.y += 1;
-
-	mixer = new THREE.AnimationMixer(model2)
-	mixers.push(mixer);
-
-	mixer.clipAction(gltf.animations[0]).play();
-	mixer.clipAction(gltf.animations[1]).play();
-	
-	model2 = model.clone();
-	scene.add(model2);
-	model2.position.z -= 8;
-	model2.position.y += 1.8;
-	mixer = new THREE.AnimationMixer(model2)
-	mixers.push(mixer);
-
-	mixer.clipAction(gltf.animations[0]).play();
-	mixer.clipAction(gltf.animations[1]).play();
-	
-	
-
 } );
 
 
@@ -171,11 +174,25 @@ controls.maxPolarAngle = Math.PI / 2;
 let gui_model = {
 	
 }
+
+function setPlaceModel(model){
+	if(placeModel != null){
+		scene.remove(model.model);
+	}
+	placeModel = model;
+	if(model == null){
+		placeModelInstance = null;
+	}else{
+		placeModelInstance = model.CreateInstance();
+		scene.add(placeModelInstance.model);
+	}
+}
+
 gui_model['Coal Plant'] = function(){
-	
+	setPlaceModel(coalPower_model);
 };
 gui_model['Wind Mill'] = function(){
-
+	setPlaceModel(windMill_model);
 };
 gui_model['Solar Cells'] = function(){
 
@@ -193,6 +210,30 @@ let sim = new WorldSimulator(64, 64, {});
 const clock = new THREE.Clock();
 
 function animate(time) {
+
+	raycaster.setFromCamera( pointer, camera );
+	
+	// calculate objects intersecting the picking ray
+	const intersects = raycaster.intersectObjects( scene.children );
+	let dist = 10000.0;
+	if(placeModelInstance != null){
+		for(let intersect of intersects){
+			if(intersect.object.box != true)
+				continue;
+			if(intersect.object == placeModelInstance.model)
+				continue;
+			if(intersect.distance > dist) continue;
+			dist = intersect.distance;
+			let v = intersect.point;
+			placeModelInstance.model.position.set(v.x, v.y, v.z);
+		
+
+		}
+		
+
+	}
+	
+
 	let delta = clock.getDelta();
 	requestAnimationFrame( animate );
 	renderer.render( scene, camera );
@@ -205,5 +246,5 @@ function animate(time) {
 	
 	sim.timestep(time, []);
 }
-
+window.addEventListener( 'pointermove', onPointerMove );
 animate(0.0);
