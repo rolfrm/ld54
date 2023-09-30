@@ -95,18 +95,18 @@ camera.lookAt(new THREE.Vector3(10,0,10));
 
 camera.position.z = -10;
 camera.position.x = -10;
-let time = 0.0;
-function animate() {
+
+function animate(time) {
 	requestAnimationFrame( animate );
 	renderer.render( scene, camera );
-	water.position.y = Math.sin(time * 0.2) * 1.0 + 0.5;
-	time += 0.1;
+	water.position.y = Math.sin(time * 0.002) * 1.0 + 0.5;
+	
 
-	directionalLight.position.set( Math.sin(time * 0.2) * 32, Math.cos(time * 0.2) * 32, 20 );
+	directionalLight.position.set( Math.sin(time * 0.002) * 32, Math.cos(time * 0.002) * 32, 20 );
 	directionalLight.lookAt(new THREE.Vector3(0,0,0))
 	
 
 
 }
 
-animate();
+animate(0.0);
