@@ -100,34 +100,13 @@ function setPlaceModel(model){
 }
 
 let mixers = [];
-gltfLoader.load( 'assets/windmill.gltf', function ( gltf ) {
-	let model = gltf.scene;
-	model.castShadow = true;
-	model.receiveShadow = true;
-	model.position.y = 8;
-	model.position.z = -2;
-	model.children.forEach((child) => {
-		child.castShadow = true;
-		child.receiveShadow = true;
-	});
-
-	let mixer = new THREE.AnimationMixer(gltf.scene)
-	mixers.push(mixer);
-
-	mixer.clipAction(gltf.animations[0].clone()).play();
-	mixer.clipAction(gltf.animations[1].clone()).play();
-	
-	model.scale.set(0.5, 0.5, 0.5);
-	scene.add( model );
-} );
-
 
 const aspect = window.innerWidth / window.innerHeight;
 const frustumSize = 30;
 const scene = new THREE.Scene();
 const camera = new THREE.OrthographicCamera( frustumSize * aspect / - 2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / - 2, 0.01, 1000 );
 
-const mapPng = bmlloader.load('assets/map1-64x64.png', bitmapLoaded);
+bmlloader.load('assets/map1-64x64.png', bitmapLoaded);
 
 const renderer = new THREE.WebGLRenderer();
 renderer.shadowMap.enabled = true;
