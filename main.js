@@ -38,7 +38,7 @@ const geometry4 = new THREE.CylinderGeometry(0.3, 0.3, 6);
 const material4 = new THREE.MeshStandardMaterial( { color: 0xDDDDDD } );
 
 const cube4 = new THREE.Mesh( geometry4, material4 );
-cube4.position.y = 3;
+cube4.position.y = 4.2;
 cube4.castShadow = true;
 
 
@@ -84,7 +84,7 @@ directionalLight.shadow.bias = -0.0005;
 
 scene.add( directionalLight );
 
-const ambientLight = new THREE.AmbientLight( 0xFFFFFF, 1.6 );
+const ambientLight = new THREE.AmbientLight( 0xFFFFFF, 0.5 );
 //ambientLight.position.set( 10, -10, 10 );
 scene.add( ambientLight );
 
@@ -101,6 +101,12 @@ function animate() {
 	renderer.render( scene, camera );
 	water.position.y = Math.sin(time * 0.2) * 1.0 + 0.5;
 	time += 0.1;
+
+	directionalLight.position.set( Math.sin(time * 0.2) * 32, Math.cos(time * 0.2) * 32, 20 );
+	directionalLight.lookAt(new THREE.Vector3(0,0,0))
+	
+
+
 }
 
 animate();
