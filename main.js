@@ -2,13 +2,58 @@ import * as THREE from 'three';
 import { WorldSimulator } from 'worldsim';
 
 const loader = new THREE.TextureLoader();
-const displacement = loader.load('assets/map1-64x64.png');
+const bmlloader = new THREE.ImageBitmapLoader();
+
+function getTextureData(texture) {
+	// Assuming you have a texture named 'yourTexture' in your scene
+
+	var image = texture;
+
+	// Create a canvas element to draw the image
+	var canvas = document.createElement('canvas');
+	canvas.width = image.width;
+	canvas.height = image.height;
+
+	var context = canvas.getContext('2d');
+	context.drawImage(image, 0, 0);
+
+	// Get the image data from the canvas
+	var imageData = context.getImageData(0, 0, canvas.width, canvas.height);
+
+	// Now 'imageData' contains the pixel data of the texture
+	return imageData;
+
+}
+function bitmapLoaded(bmp){
+	let imageData = getTextureData(bmp);
+	let w = imageData.width;
+	let h = imageData.width;
+	let wh = w * h;
+	let channels = imageData.data.length / wh;
+	for(let i = 0; i < h; i++){
+		for(let j = 0; j < w; j++){
+			let index = channels * (i * w + j);
+			const height = imageData.data[4 * (i * w + j + 1)] / 256.0;
+			const geometry = new THREE.BoxGeometry( 1, height * 20.0, 1 );
+
+			const cube = new THREE.Mesh( geometry, material );
+			cube.position.x = i - h / 2;
+			cube.position.z = j - w / 2;
+			scene.add( cube );
+			cube.castShadow = true;
+			cube.receiveShadow = true;
+		}
+	}
+}
+
+
 
 const aspect = window.innerWidth / window.innerHeight;
 const frustumSize = 30;
 const scene = new THREE.Scene();
 const camera = new THREE.OrthographicCamera( frustumSize * aspect / - 2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / - 2, -1000, 1000 );
 
+const mapPng = bmlloader.load('assets/map1-64x64.png', bitmapLoaded);
 
 const renderer = new THREE.WebGLRenderer();
 renderer.shadowMap.enabled = true;
@@ -16,36 +61,7 @@ renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.setSize( window.innerWidth, window.innerHeight );
 document.body.appendChild( renderer.domElement );
 
-const geometry = new THREE.BoxGeometry( 64, 1, 64 );
 const material = new THREE.MeshStandardMaterial( { color: 0x00ffff } );
-
-const cube = new THREE.Mesh( geometry, material );
-
-scene.add( cube );
-const geometry2 = new THREE.BoxGeometry( 32, 2, 32 );
-const material2 = new THREE.MeshStandardMaterial( { color: 0xffff66 } );
-
-const cube2 = new THREE.Mesh( geometry2, material2 );
-
-scene.add( cube2 );
-const geometry3 = new THREE.BoxGeometry( 20, 3, 20 );
-const material3 = new THREE.MeshStandardMaterial( { color: 0x44ff44 } );
-
-const cube3 = new THREE.Mesh( geometry3, material3 );
-scene.add( cube3 );
-
-const geometry4 = new THREE.CylinderGeometry(0.3, 0.3, 6);
-const material4 = new THREE.MeshStandardMaterial( { color: 0xDDDDDD } );
-
-const cube4 = new THREE.Mesh( geometry4, material4 );
-cube4.position.y = 4.2;
-cube4.castShadow = true;
-
-
-
-scene.add( cube4 );
-
-
 
 
 const waterGeometry = new THREE.BoxGeometry( 100, 0.1, 100 );
@@ -55,13 +71,6 @@ waterMaterial.transparent = true;
 const water = new THREE.Mesh(waterGeometry, waterMaterial);
 
 scene.add( water );
-
-cube3.castShadow = true;
-cube2.castShadow = true;
-cube.castShadow = true;
-cube3.receiveShadow = true;
-cube2.receiveShadow = true;
-cube.receiveShadow = true;
 
 
 
@@ -104,7 +113,7 @@ function animate(time) {
 	water.position.y = Math.sin(time * 0.002) * 1.0 + 0.5;
 	
 
-	directionalLight.position.set( Math.sin(time * 0.002) * 32, Math.cos(time * 0.002) * 32, 20 );
+	//directionalLight.position.set( Math.sin(time * 0.002) * 32, Math.cos(time * 0.002) * 32, 20 );
 	directionalLight.lookAt(new THREE.Vector3(0,0,0))
 	
 	sim.timestep(time, []);
