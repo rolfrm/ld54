@@ -368,7 +368,9 @@ function onDocumentMouseDown( event ) {
 	}
 	if(placeModel != null){
 		placeBuilding(placeModel, placeModelInstance.model.position);
-		setPlaceModel(null);
+		if(!event.shiftKey){
+			setPlaceModel(null);
+		}
 	}
   
   }
