@@ -90,6 +90,7 @@ class WorldSimulator {
         this.production = 0;
         for(let construction of constructions){
             let type = construction.type;
+            if(type == undefined) continue;
             
             emissionsNow += construction.type.emission;
             totalReduction += construction.type.reduction;
@@ -103,6 +104,7 @@ class WorldSimulator {
         
         for(let construction of constructions){
             let type = construction.type;
+            if(type == undefined) continue;
             if(this.consumption + type.consumption < this.production){
                 this.consumption += type.consumption;
                 this.income += type.revenue;

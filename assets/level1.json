@@ -1,0 +1,679 @@
+{
+    "level": [
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 14,
+                "y": 5,
+                "z": -15
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 4,
+                "y": 7.109375,
+                "z": -17
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 6,
+                "y": 7.3046875,
+                "z": -10
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 2,
+                "y": 7.421875,
+                "z": -5
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -3,
+                "y": 8.515625,
+                "z": -12
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -5,
+                "y": 6.6015625,
+                "z": -20
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -11,
+                "y": 4.921875,
+                "z": -24
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -16,
+                "y": 4.921875,
+                "z": -22
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -17,
+                "y": 5.859375,
+                "z": -10
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -8,
+                "y": 8.4375,
+                "z": -15
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -9,
+                "y": 7.5,
+                "z": -6
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -16,
+                "y": 5.390625,
+                "z": -2
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -11,
+                "y": 5.234375,
+                "z": 2
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 10,
+                "y": 5.0390625,
+                "z": -2
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 15,
+                "y": 5,
+                "z": -7
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 16,
+                "y": 5.15625,
+                "z": 3
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 18,
+                "y": 6.9140625,
+                "z": 9
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 21,
+                "y": 7.2265625,
+                "z": 8
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 20,
+                "y": 7.1875,
+                "z": 6
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 20,
+                "y": 7.1875,
+                "z": 6
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 19,
+                "y": 7.1875,
+                "z": 7
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 19,
+                "y": 7.1875,
+                "z": 9
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 23,
+                "y": 6.4453125,
+                "z": 11
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 23,
+                "y": 6.875,
+                "z": 8
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 20,
+                "y": 6.9140625,
+                "z": 11
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 21,
+                "y": 7.1484375,
+                "z": 10
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 18,
+                "y": 6.5625,
+                "z": 11
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 24,
+                "y": 5.3515625,
+                "z": 4
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 25,
+                "y": 5.6640625,
+                "z": 10
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 20,
+                "y": 5.1953125,
+                "z": 14
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 14,
+                "y": 4.9609375,
+                "z": 6
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -5,
+                "y": 5,
+                "z": 12
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -1,
+                "y": 5.8984375,
+                "z": 16
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 3,
+                "y": 6.4453125,
+                "z": 15
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 4,
+                "y": 5.8984375,
+                "z": 16
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 5,
+                "y": 5.1171875,
+                "z": 18
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 1,
+                "y": 6.640625,
+                "z": 15
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 2,
+                "y": 5.78125,
+                "z": 17
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 4,
+                "y": 5,
+                "z": 20
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 1,
+                "y": 5.0390625,
+                "z": 19
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 1,
+                "y": 6.3671875,
+                "z": 16
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -1,
+                "y": 5.1953125,
+                "z": 18
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -3,
+                "y": 5.1953125,
+                "z": 16
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -8,
+                "y": 4.9609375,
+                "z": 14
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -18,
+                "y": 4.9609375,
+                "z": 16
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -21,
+                "y": 5,
+                "z": 14
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -20,
+                "y": 5,
+                "z": 16
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -25,
+                "y": 6.6015625,
+                "z": 25
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -23,
+                "y": 5.859375,
+                "z": 26
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 25,
+                "y": 5.46875,
+                "z": -26
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 24,
+                "y": 5.46875,
+                "z": -25
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -2,
+                "y": 8.6328125,
+                "z": -10
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -4,
+                "y": 7.421875,
+                "z": -5
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 1,
+                "y": 8.4375,
+                "z": -8
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 0,
+                "y": 7.421875,
+                "z": -5
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -4,
+                "y": 8.6328125,
+                "z": -10
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -8,
+                "y": 8.6328125,
+                "z": -12
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -6,
+                "y": 8.4375,
+                "z": -8
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -2,
+                "y": 8.4375,
+                "z": -8
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 3,
+                "y": 7.9296875,
+                "z": -12
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 4,
+                "y": 7.8125,
+                "z": -7
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 1,
+                "y": 8.5546875,
+                "z": -11
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -1,
+                "y": 8.125,
+                "z": -7
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -2,
+                "y": 7.265625,
+                "z": -4
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 2,
+                "y": 7.2265625,
+                "z": -3
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -4,
+                "y": 6.953125,
+                "z": -1
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -4,
+                "y": 8.59375,
+                "z": -9
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -6,
+                "y": 7.265625,
+                "z": -4
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -2,
+                "y": 6.953125,
+                "z": -1
+            }
+        },
+        {
+            "typeName": "City 1",
+            "position": {
+                "x": 23,
+                "y": 4.8046875,
+                "z": -25
+            }
+        },
+        {
+            "typeName": "City 1",
+            "position": {
+                "x": -25,
+                "y": 5.234375,
+                "z": 23
+            }
+        },
+        {
+            "typeName": "Town 1",
+            "position": {
+                "x": -11,
+                "y": 8.59375,
+                "z": -13
+            }
+        },
+        {
+            "typeName": "Town 1",
+            "position": {
+                "x": -12,
+                "y": 7.1875,
+                "z": -3
+            }
+        },
+        {
+            "typeName": "Town 1",
+            "position": {
+                "x": 3,
+                "y": 7.1875,
+                "z": -1
+            }
+        },
+        {
+            "typeName": "Town 1",
+            "position": {
+                "x": 9,
+                "y": 6.2109375,
+                "z": -8
+            }
+        },
+        {
+            "typeName": "Town 1",
+            "position": {
+                "x": 4,
+                "y": 7.1875,
+                "z": -16
+            }
+        },
+        {
+            "typeName": "City 1",
+            "position": {
+                "x": 18,
+                "y": 5.0390625,
+                "z": 14
+            }
+        },
+        {
+            "typeName": "City 1",
+            "position": {
+                "x": 2,
+                "y": 6.640625,
+                "z": 15
+            }
+        },
+        {
+            "typeName": "Coal 1",
+            "position": {
+                "x": -6,
+                "y": 8.6328125,
+                "z": -11
+            }
+        },
+        {
+            "typeName": "Coal 1",
+            "position": {
+                "x": -7,
+                "y": 7.6953125,
+                "z": -6
+            }
+        },
+        {
+            "typeName": "Coal 1",
+            "position": {
+                "x": 2,
+                "y": 8.515625,
+                "z": -10
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": 25,
+                "y": 5.5859375,
+                "z": 26
+            }
+        },
+        {
+            "typeName": "Tree 1",
+            "position": {
+                "x": -25,
+                "y": 4.4140625,
+                "z": -25
+            }
+        },
+        {
+            "typeName": "Town 1",
+            "position": {
+                "x": -24,
+                "y": 4.4140625,
+                "z": -25
+            }
+        }
+    ],
+    "tech": [
+        "Coal 1"
+    ]
+}

@@ -8,6 +8,7 @@ import { GraphicalModel } from './graphicalModel.js';
 import { GameTech } from './techTree.js';
 import { getSimModels } from './worldsimModels.js';
 
+
 let level = [];
 
 const techTree = GameTech();	
@@ -63,9 +64,12 @@ function bitmapLoaded(bmp){
 			cube.castShadow = true;
 			cube.receiveShadow = true;
 			cube.box = true;
-			
 		}
 	}
+	// load level 1
+	fetch("assets/level1.json").then((code) => {
+		code.json().then((j) => loadFromJson(j));
+	})
 }
 
 // for raycasting into the scene.
@@ -104,8 +108,14 @@ town_model.scale = 0.3;
 let city_model = GraphicalModel.Load('assets/city.gltf', 'City 1')
 city_model.scale = 0.5;
 
-let game_models = [windMill_model, windMill2_model, coalPower_model, coalPower2_model, tree_model, town_model, city_model];
+let progress_model = GraphicalModel.Load('assets/progressbar.gltf', 'Progress 1')
+//progress_model.scale = 0.25;
+progress_model.offset = new THREE.Vector3(0,5,0);
+
+
+let game_models = [windMill_model, windMill2_model, coalPower_model, coalPower2_model, tree_model, town_model, city_model, progress_model];
 for(let model of game_models){
+	
 	model.tech = simModels[model.name];
 }
 let placeModel = null;
@@ -302,20 +312,29 @@ addGameFunction("Save To Clipboard", ()=> {
 });
 
 function saveToGameStateToJson(){
-	let gameData = {level: level, tech: Array.from(techTree.acquiredNodes.keys()).map((x) => x.name)};
+	let gameData = {level: level.map((x)=> ({typeName: x.type.name, position: x.position})), 
+		tech: Array.from(techTree.acquiredNodes.keys()).map((x) => x.name)};
 	return JSON.stringify(gameData);
 }
 
-function loadFromJson(json){
+function loadFromJsonString(json){
 	let loaded = JSON.parse(json);
+	return loadFromJson(loaded);
+}
+
+function loadFromJson(loaded){
+	
 	level = loaded.level;
 	buildingsNode.clear();
 	mixers = []
 	let lookup = {}
+	let typeLookup = {}
 	for(let model of game_models){
 		lookup[model.name] = model;
+		typeLookup[model.name] = model.tech;
 	}
 	for(let x of level){
+		x.type = typeLookup[x.typeName];
 		let type = x.type;
 		let pos = x.position;
 		let model = lookup[type.name];
@@ -329,7 +348,7 @@ function loadFromJson(json){
 addGameFunction("Load", ()=>{
 	let savedGame = localStorage.getItem(gameStorageKey);
 	if(savedGame == null) return;
-	loadFromJson(savedGame);
+	loadFromJsonString(savedGame);
 });
 
 function placeBuilding(placeModel, position){
