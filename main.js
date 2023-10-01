@@ -465,6 +465,10 @@ function onDocumentMouseDown( event ) {
 				techTree.AcquireTech(thisnode);
 				updateBuildFolder();
 				sim.funds -= thisnode.cost;
+				thisnode.cost = 0;
+				techFolder.clear();
+				techFolder.clear = undefined;
+				
 			}else{
 				alert("Insufficient funds.")
 			}
