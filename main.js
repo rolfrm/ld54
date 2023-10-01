@@ -66,10 +66,25 @@ function bitmapLoaded(bmp){
 			cube.box = true;
 		}
 	}
+	
+	function loadLevel(){
+		// wait with loading the level until
+		for(let x of game_models){
+			if(x.ready == false){
+				setTimeout(loadLevel, 100);
+				return; 
+			}
+		}
+
 	// load level 1
 	fetch("assets/level1.json").then((code) => {
 		code.json().then((j) => loadFromJson(j));
 	})
+	}
+
+	loadLevel();
+
+	
 }
 
 // for raycasting into the scene.
