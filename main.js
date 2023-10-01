@@ -90,7 +90,8 @@ windMill_model.offset = new THREE.Vector3(1.2 * scaling,1.2 * scaling,-0.2 * sca
 let windMill2_model = GraphicalModel.Load('assets/windmill2.gltf', 'Wind Mill 2')
 
 let coalPower_model = GraphicalModel.Load('assets/coal1.gltf', 'Coal 1')
-coalPower_model.scale = 0.5;
+coalPower_model.scale = 0.4;
+coalPower_model.offset = new THREE.Vector3(-0.4,0.45,-0.35);
 
 let coalPower2_model = GraphicalModel.Load('assets/smoke.gltf', 'Coal 2')
 coalPower2_model.scale = 0.4;
@@ -138,6 +139,27 @@ let mixers = [];
 const aspect = window.innerWidth / window.innerHeight;
 const frustumSize = 30;
 const scene = new THREE.Scene();
+const uiScene = new THREE.Scene();
+const uiCamera = new THREE.OrthographicCamera( frustumSize * aspect / - 2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / - 2, 0.01, 1000 );
+uiCamera.position.y = 10;
+uiCamera.lookAt(new THREE.Vector3(0,0,0));
+const uiLight = new THREE.AmbientLight(0xFFFFFF, 1.0);
+uiScene.add(uiLight);
+
+const uiLight2 = new THREE.DirectionalLight(0xFFFFFF, 1.0);
+uiLight2.position.y = 100;
+uiLight2.position.z = -50;
+uiLight2.lookAt(new THREE.Vector3(0,0,0));
+uiLight2.castShadow = true;
+uiScene.add(uiLight2);
+
+const uiBackground = new THREE.MeshStandardMaterial( { color: 0x4444ff } );
+
+let uiPlane = new THREE.BoxGeometry(100,1,100);
+let uiMesh = new THREE.Mesh(uiPlane, uiBackground);
+uiMesh.position.y = -1;
+uiMesh.receiveShadow = true;
+uiScene.add(uiMesh);
 
 const camera = new THREE.OrthographicCamera( frustumSize * aspect / - 2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / - 2, 0.01, 1000 );
 
@@ -167,7 +189,7 @@ const selectedNodeMaterial = new THREE.MeshStandardMaterial( { color: 0x66FF66 }
 const availableNodeMaterial = new THREE.MeshStandardMaterial( { color: 0xFFFF44 } );
 const acquiredTechMaterial = new THREE.MeshStandardMaterial( { color: 0x666666 } );
 let highLightedNode = null;
-scene.add(techTreeUi);
+uiScene.add(techTreeUi);
 {
 	for (const tech of techTree.allNodes) {
 		let cube = new THREE.BoxGeometry(1, 1, 1);
@@ -186,10 +208,12 @@ scene.add(techTreeUi);
 
 
 		let nodeUi = new THREE.Mesh(cube, nodeMaterial);
+		nodeUi.castShadow = true;
+		nodeUi.receiveShadow = true;
 		nodeUi.tech = tech;
 		nodeUi.position.x = tech.pos[0] * 1.1;
 		nodeUi.position.z = tech.pos[1] * 1.1;
-		nodeUi.position.y = 20;
+		nodeUi.position.y = 0;
 
 		for (const req of tech.requirements) {
 			let start = new THREE.Vector3(req.pos[0] * 1.1, 20, req.pos[1] * 1.1);
@@ -372,14 +396,26 @@ function onDocumentMouseDown( event ) {
 	event.preventDefault();
 	if(highLightedNode != null){
 		//techFolder.clear();
+		techFolder.open();
 		if(techFolder.clear != undefined){
 			techFolder.clear();
 		}
 		let a = techFolder.add(highLightedNode, "name")
 		let b = techFolder.add(highLightedNode, "cost")
+		let thisnode = highLightedNode;
+		highLightedNode.buy = () => {
+			if(sim.funds > thisnode.cost){
+				techTree.AcquireTech(thisnode);
+				sim.funds -= thisnode.cost;
+			}else{
+				alert("Insufficient funds.")
+			}
+		};
+		let c = techFolder.add(highLightedNode, "buy")
 		techFolder.clear = () => {
 			techFolder.remove(a);
 			techFolder.remove(b);
+			techFolder.remove(c);
 		}
 		//alert("Tech node clicked!");
 		return;
@@ -398,39 +434,46 @@ function onDocumentMouseDown( event ) {
 
 let sim = new WorldSimulator(64, 64, {});
 const clock = new THREE.Clock();
+let techTreeScene = false;
 
 function animate(time) {
 
-	raycaster.setFromCamera( pointer, camera );
 	
-	// calculate objects intersecting the picking ray
-	const intersects = raycaster.intersectObjects( scene.children );
-	let dist = 10000.0;
-	let availableTech = techTree.GetAvailableNodes();
-	for (let techNode of techTreeUi.children){
-		if(availableTech.includes(techNode.tech)){
-			techNode.material = availableNodeMaterial;
-		}else if(techTree.acquiredNodes.has(techNode.tech)){
-			techNode.material = acquiredTechMaterial;
-		}else{
-			techNode.material = nodeMaterial;
-		}
-	}
-	highLightedNode = null;
-	for(let intersect of intersects){
-		if(intersect.object.is_tech_node == true){
-			intersect.object.material = selectedNodeMaterial;
-			highLightedNode = intersect.object.tech;
-			
-			break;
-		}
-	}
 	
-	if(placeModelInstance != null){
-		
-		
+	
+	if(techTreeScene){ // tech tree clicks
+		raycaster.setFromCamera( pointer, uiCamera );
+		const intersects = raycaster.intersectObjects( uiScene.children );
+		let availableTech = techTree.GetAvailableNodes();
+		for (let techNode of techTreeUi.children){
+			if(availableTech.includes(techNode.tech)){
+				techNode.material = availableNodeMaterial;
+			}else if(techTree.acquiredNodes.has(techNode.tech)){
+				techNode.material = acquiredTechMaterial;
+			}else{
+				techNode.material = nodeMaterial;
+			}
+		}
+		highLightedNode = null;
 		for(let intersect of intersects){
-			if(intersect.object.box != true)
+			if(intersect.object.is_tech_node == true){
+				intersect.object.material = selectedNodeMaterial;
+				highLightedNode = intersect.object.tech;
+			
+				break;
+			}
+		}
+	}else{
+
+		raycaster.setFromCamera( pointer, camera );
+		const intersects = raycaster.intersectObjects( scene.children );
+		let dist = 10000.0;
+		
+		if(placeModelInstance != null){
+		
+		
+				for(let intersect of intersects){
+				if(intersect.object.box != true)
 				continue;
 			if(intersect.object == placeModelInstance.model)
 				continue;
@@ -439,6 +482,7 @@ function animate(time) {
 			let v = intersect.point;
 			placeModelInstance.model.position.set(Math.round(v.x), v.y, Math.round(v.z));
 		}
+	}
 	}
 	gui_model.CO2 = sim.adjustedCo2Level;
 	gui_model.Temperature = sim.temperatureRise.amount
@@ -453,8 +497,13 @@ function animate(time) {
 	
 
 	let delta = clock.getDelta();
-	requestAnimationFrame( animate );
-	renderer.render( scene, camera );
+	if(techTreeScene){
+		renderer.render(uiScene, uiCamera);
+	}else{
+		renderer.render( scene, camera );
+	}
+	
+	
 	water.position.y = sim.waterLevel;
 	
 	mixers.forEach((mixer) => mixer.update(delta))
@@ -464,14 +513,21 @@ function animate(time) {
 	directionalLight.lookAt(new THREE.Vector3(0,0,0))
 	
 	sim.timestep(time, level);
+
+	requestAnimationFrame( animate );
 }
 window.addEventListener( 'pointermove', onPointerMove );
 
 function onDocumentKeyDown(event) {
     var keyCode = event.which;
 	
+	if(event.key == "Tab"){
+		techTreeScene = !techTreeScene;
+		event.preventDefault();
+		return;
+	}
     // up
-    if (keyCode == 27) {
+    if (event.key == "ArrowUp") {
 		setPlaceModel(null);
 	}
 }
