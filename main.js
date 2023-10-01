@@ -298,7 +298,10 @@ let gui_model = {
 }
 
 for(let x of game_models){
-	gui_model[x.name] = function(){
+	if(x.tech == undefined){
+		x.tech = {cost: 0};
+	}
+	gui_model[x.name + " $" + x.tech.cost] = function(){
 		setPlaceModel(x);
 	};	
 }
@@ -320,7 +323,7 @@ function updateBuildFolder(){
 	}
 	for(let modl of game_models){
 		if(unlockedTech[modl.name] == true || unlockedTech["*"] == true){
-			let item = buildFolder.add(gui_model, modl.name);
+			let item = buildFolder.add(gui_model, modl.name + " $" + modl.tech.cost);
 			items.push(item)
 		}
 	}
@@ -457,6 +460,11 @@ function onDocumentMouseDown( event ) {
 		return;
 	}
 	if(placeModel != null){
+		if( placeModel.tech.cost > sim.funds){
+			alert("insufficent funds.");
+			return;
+		}
+		sim.funds -= placeModel.tech.cost;
 		placeBuilding(placeModel, placeModelInstance.model.position);
 		if(!event.shiftKey){
 			setPlaceModel(null);
