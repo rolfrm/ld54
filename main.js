@@ -514,6 +514,11 @@ function onDocumentMouseDown( event ) {
 		let b = techFolder.add(highLightedNode, "cost")
 		let thisnode = highLightedNode;
 		highLightedNode.buy = () => {
+			if(!techTree.IsSatisfied(thisnode)){
+				alert("Technology not satisfied")
+				return;
+			}
+
 			if(sim.funds > thisnode.cost){
 				techTree.AcquireTech(thisnode);
 				updateBuildFolder();

@@ -27,6 +27,10 @@ class TechTree{
         this.acquiredNodes.set(node, true)
     }
 
+    IsSatisfied(node){
+        return node.isSatisifed(this.acquiredNodes);
+    }
+
     GetAvailableNodes(){
         let result = []
         for(let node of this.allNodes){
