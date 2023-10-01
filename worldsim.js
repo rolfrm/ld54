@@ -64,7 +64,7 @@ class WorldSimulator {
     constructor(width, height, simParameters) {
         this.#secondsPerHour = simParameters.secondsPerHour ?? 1.0;
 
-        this.funds = simParameters.startingFunds ?? 0.0;
+        this.funds = simParameters.startingFunds ?? 10000.0;
         this.income = simParameters.income ?? 1.0;
 
         this.#startWaterLevel = simParameters.startingWaterLevel ?? 4;
@@ -145,12 +145,18 @@ class WorldSimulator {
         
         for(let construction of constructions){
             let type = construction.type;
+            construction.active = false;
             if(type == undefined) continue;
             if(this.consumption + type.consumption < this.production){
                 this.consumption += type.consumption;
                 this.income += type.revenue;
+                this.income -= type.maintainance;
+                emissionsNow -= type.capture;
+                construction.active = true;
+                
             }
         }
+        
 
         // Update stuff
         this.funds += this.income * hourDiff;

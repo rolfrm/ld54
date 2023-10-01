@@ -11,6 +11,7 @@ class SimModel{
         this.windDriven = false;
         this.variable = false;
         this.maintainance = 0;
+        this.capture = 0;
     }
 }
 
@@ -20,8 +21,8 @@ function getSimModels(){
     let coalPlant1 = {name: "Coal 1", production: 10.0, cost: 10.0,  emission: 10.0, variable: true};
     let coalPlant2 = {name: "Coal 2", production: 30.0, cost: 20.0,  emission: 39.0, variable: true};
 
-    let capture1 = {name: "Carbon Capture 1", production: 0.0, cost: 200.0, consumption: 300,  emission: -2.0, maintainance: 100};
-    let capture2 = {name: "Carbon Capture 2", production: 0.0, cost: 1000.0, consumption: 3000,  emission: -100.0, maintainance: 1000};
+    let capture1 = {name: "Carbon Capture 1", production: 0.0, cost: 200.0, consumption: 300,  capture: -2.0, maintainance: 100};
+    let capture2 = {name: "Carbon Capture 2", production: 0.0, cost: 1000.0, consumption: 3000,  capture: -100.0, maintainance: 1000};
 
 
     let windmill1 = {name: "Wind Mill 1", production: 5.0, cost: 50.0, emission: 0.0, windDriven: true};

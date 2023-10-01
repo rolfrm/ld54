@@ -141,11 +141,11 @@ fusion1_model.scale = 0.5;
 let fusion2_model = GraphicalModel.Load('assets/fusion2.gltf', 'Fusion Plant 2')
 fusion2_model.scale = 0.5;
 
-let fusion3_model = GraphicalModel.Load('assets/fusion2.gltf', 'Fusion Plant 2')
+let fusion3_model = GraphicalModel.Load('assets/fusion2.gltf', 'Fusion Plant 3')
 fusion3_model.scale = 0.5;
 
-let capture1_model = GraphicalModel.Load('assets/fusion2.gltf', 'Carbon Capture 1')
-capture1_model.scale = 0.5;
+let capture1_model = GraphicalModel.Load('assets/capture.gltf ', 'Carbon Capture 1')
+capture1_model.scale = 0.15;
 let capture2_model = GraphicalModel.Load('assets/fusion2.gltf', 'Carbon Capture 2')
 capture2_model.scale = 0.5;
 
