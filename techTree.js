@@ -60,8 +60,11 @@ function GameTech(){
     const fusion2 = Object.assign(new TechNode, {name: "Fusion 2", requirements: [fusion1], cost: 2000, pos: [5,4], unlocks: ["Fusion Plant 2"]});
     const fusion3 = Object.assign(new TechNode, {name: "Fusion 3", requirements: [fusion2], cost: 4000, pos: [6,4], unlocks: ["Fusion Plant 3"]});
     const production1 = Object.assign(new TechNode, {name: "Production 1", requirements: [coal1], cost: 200, pos: [1,5], unlocks: ["Factory 1"]});
+    const capture1 = Object.assign(new TechNode, {name: "Carbon Capture", requirements: [semiConductor], cost: 1000, pos: [2,6], unlocks: ["Capture 1"]});
+    const capture2 = Object.assign(new TechNode, {name: "Carbon Capture 2", requirements: [capture1], cost: 10000, pos: [3,6], unlocks: ["Capture 2"]});
 
-    return new TechTree([everything, coal1, coal2, materialPhysics, coal3, wind, wind2, wind3, semiConductor, solarCells, ecology1, ecology2, ecology3,
+    return new TechTree([everything, coal1, coal2, materialPhysics, coal3, wind, wind2, wind3, 
+        semiConductor, solarCells, solarCells2, ecology1, ecology2, ecology3, capture1, capture2,
     fusion1, fusion2, fusion3, production1]);
 
 
