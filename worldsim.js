@@ -148,7 +148,7 @@ class WorldSimulator {
         this.funds += this.income * hourDiff;
 
         // CO2 + Temperature + Water level
-        this.co2Level.step(hourDiff, emissionsNow);
+        this.co2Level.step(hourDiff, emissionsNow * 0.5);
         this.emission = emissionsNow;
         this.adjustedCo2Level = this.co2Level.amount;
 
