@@ -445,6 +445,25 @@ addGameFunction("Load", ()=>{
 	loadFromJsonString(savedGame);
 });
 
+function overlap(a, b) {
+	if (Math.round(a.x) != Math.round(b.x)) {
+		return false;
+	}
+	if (Math.round(a.z) != Math.round(b.z)) {
+		return false;
+	}
+	return true;
+}
+
+function canPlace(position) {
+	for (const building of level) {
+		if (overlap(building.position, position)) {
+			return false;
+		}
+	}
+	return true;
+}
+
 function placeBuilding(placeModel, position){
 	let newModel = placeModel.CreateInstance();
 	newModel.model.position.set(position.x, position.y, position.z);
@@ -508,14 +527,16 @@ function onDocumentMouseDown( event ) {
 		return;
 	}
 	if(placeModel != null){
-		if( placeModel.tech.cost > sim.funds){
-			alert("insufficent funds.");
-			return;
-		}
-		sim.funds -= placeModel.tech.cost;
-		placeBuilding(placeModel, placeModelInstance.model.position);
-		if(!event.shiftKey){
-			setPlaceModel(null);
+		if (canPlace(placeModelInstance.model.position)) {
+			if( placeModel.tech.cost > sim.funds){
+				alert("insufficent funds.");
+				return;
+			}
+			sim.funds -= placeModel.tech.cost;
+			placeBuilding(placeModel, placeModelInstance.model.position);
+			if(!event.shiftKey){
+				setPlaceModel(null);
+			}
 		}
 	}
   
