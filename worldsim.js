@@ -61,7 +61,7 @@ class WorldSimulator {
     constructor(width, height, simParameters) {
         this.#secondsPerHour = simParameters.secondsPerHour ?? 1.0;
 
-        this.funds = simParameters.startingFunds ?? 0.0;
+        this.funds = simParameters.startingFunds ?? 1000.0;
         this.income = simParameters.income ?? 1.0;
 
         this.#startWaterLevel = simParameters.startingWaterLevel ?? 4;

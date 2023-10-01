@@ -106,7 +106,7 @@ let windMill2_model = GraphicalModel.Load('assets/windmill2.gltf', 'Wind Mill 2'
 
 let coalPower_model = GraphicalModel.Load('assets/coal1.gltf', 'Coal 1')
 coalPower_model.scale = 0.4;
-coalPower_model.offset = new THREE.Vector3(-0.4,0.45,-0.35);
+
 
 let coalPower2_model = GraphicalModel.Load('assets/smoke.gltf', 'Coal 2')
 coalPower2_model.scale = 0.4;
@@ -132,6 +132,8 @@ let solar_model = GraphicalModel.Load('assets/solarpanel.gltf', 'Solar Panels 1'
 solar_model.scale = 0.5;
 let solar2_model = GraphicalModel.Load('assets/solar2.gltf', 'Solar Panels 2')
 solar2_model.scale = 0.5;
+let fusion1_model = GraphicalModel.Load('assets/fusion1.gltf', 'Fusion Plant 1')
+fusion1_model.scale = 0.5;
 
 
 let progress_model = GraphicalModel.Load('assets/progressbar.gltf', 'Progress 1')
@@ -139,7 +141,8 @@ let progress_model = GraphicalModel.Load('assets/progressbar.gltf', 'Progress 1'
 progress_model.offset = new THREE.Vector3(0,5,0);
 
 
-let game_models = [windMill_model, windMill2_model, coalPower_model, coalPower2_model, tree_model, tree2_model, tree3_model, town_model, city_model, progress_model, solar_model, solar2_model];
+let game_models = [windMill_model, windMill2_model, coalPower_model, coalPower2_model, tree_model, tree2_model, tree3_model, town_model, 
+	city_model, progress_model, solar_model, solar2_model, fusion1_model];
 for(let model of game_models){
 	
 	model.tech = simModels[model.name];
@@ -415,10 +418,13 @@ function loadFromJson(loaded){
 	}
 	for(let x of level){
 		x.type = typeLookup[x.typeName];
+		
 		let type = x.type;
 		let pos = x.position;
 		let model = lookup[type.name];
+		
 		let instance = model.CreateInstance();
+		x.model = instance;
 		instance.model.position.set(pos.x, pos.y, pos.z);
 		buildingsNode.add(instance.model);
 		mixers.push(instance.mixer);
@@ -437,11 +443,18 @@ function placeBuilding(placeModel, position){
 
 	level.push({
 		type: placeModel.tech,
-		position: newModel.model.position
+		position: newModel.model.position,
+		model: newModel
 	});
 
 	buildingsNode.add(newModel.model);
 	mixers.push(newModel.mixer);
+}
+
+function removeBuilding(item){
+	buildingsNode.remove(item.model.model);
+	mixers = mixers.filter((x) => x != item.model.mixer)
+	level = level.filter((x) => x != item); 
 }
 
 function onDocumentMouseDown( event ) {
@@ -569,6 +582,13 @@ function animate(time) {
 		}
 	}
 	}
+
+	for(let item of level.map((x) => x)){
+		if(item.position.y < sim.waterLevel){
+			removeBuilding(item)
+		}
+	}
+
 	gui_model.CO2 = sim.adjustedCo2Level;
 	gui_model.Temperature = sim.temperatureRise.amount
 	gui_model['Water Level'] = sim.waterRise.amount;
