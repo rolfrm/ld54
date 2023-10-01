@@ -58,17 +58,20 @@ class WorldSimulator {
     adjustedCo2Level = 0;
     production = 0;
     consumption = 0;
+    demand = 0;
+    emission = 0;
 
     constructor(width, height, simParameters) {
         this.#secondsPerHour = simParameters.secondsPerHour ?? 1.0;
 
-        this.funds = simParameters.startingFunds ?? 1000.0;
+        this.funds = simParameters.startingFunds ?? 0.0;
         this.income = simParameters.income ?? 1.0;
 
         this.#startWaterLevel = simParameters.startingWaterLevel ?? 4;
         this.co2Level = new Pollution(300, 0.1, 0.2, 300, 1000);
         this.temperatureRise = new Pollution(0, 0.1, 0.1, 0, 10);
         this.waterRise = new Pollution(0, 0, 0.1, 0, 100);
+        this.co2CriticalLevel = 500;
     };
 
     #co2LevelToTempRise(level) {
@@ -89,9 +92,38 @@ class WorldSimulator {
         let totalReduction = 0;
         this.consumption = 0;
         this.production = 0;
+        this.demand = 0;
+
         for(let construction of constructions){
             let type = construction.type;
             if(type == undefined) continue;
+            this.demand += type.consumption;
+            
+        }
+
+        for(let construction of constructions){
+            let type = construction.type;
+            if(type == undefined) continue;
+            if(type.variable == true){
+                continue;
+            }
+            
+            emissionsNow += construction.type.emission;
+            totalReduction += construction.type.reduction;
+            if(type.windDriven){
+                this.production += construction.type.production * Math.min(1.0, this.wind);
+            }else{
+                this.production += construction.type.production;
+            }
+        }
+
+        for(let construction of constructions){
+            let type = construction.type;
+            if(type == undefined) continue;
+            if(type.variable != true)
+                continue;
+            if(this.production >= this.demand)
+                continue;
             
             emissionsNow += construction.type.emission;
             totalReduction += construction.type.reduction;
@@ -117,15 +149,18 @@ class WorldSimulator {
 
         // CO2 + Temperature + Water level
         this.co2Level.step(hourDiff, emissionsNow);
+        this.emission = emissionsNow;
+        this.adjustedCo2Level = this.co2Level.amount;
 
-        const tempRise = this.#co2LevelToTempRise(this.co2Level.amount - totalReduction);
-        this.temperatureRise.step(hourDiff, tempRise);
+        //const tempRise = this.#co2LevelToTempRise(this.co2Level.amount - totalReduction);
+        //this.temperatureRise.step(hourDiff, tempRise);
         
-        this.waterRise.step(hourDiff, this.temperatureRise.amount * 0.5);
+        //this.waterRise.step(hourDiff, this.temperatureRise.amount * 0.1);
+        this.waterRise.step(hourDiff, Math.max(0, (this.adjustedCo2Level - this.co2CriticalLevel)) * 0.002);
         this.waterLevelTarget = this.#startWaterLevel + this.waterRise.amount * 0.05;
 
         
-        this.adjustedCo2Level = this.co2Level.amount - totalReduction;
+        
 
         console.log(this.co2Level.amount, this.temperatureRise.amount, this.waterLevel);
     }
@@ -142,7 +177,7 @@ class WorldSimulator {
             this.#newHour(day, hour, constructions);
         }
         let localTarget = this.waterLevelTarget + Math.sin(absTime * 0.002) * 0.1;
-        this.waterLevel = this.waterLevel * 0.98 + localTarget * 0.02;
+        this.waterLevel = this.waterLevel * 0.95 + localTarget * 0.05;
         
     }
 };

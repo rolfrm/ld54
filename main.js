@@ -112,6 +112,10 @@ let coalPower2_model = GraphicalModel.Load('assets/smoke.gltf', 'Coal 2')
 coalPower2_model.scale = 0.4;
 coalPower2_model.offset = new THREE.Vector3(-0.4,0.45,-0.35);
 
+let factory_model = GraphicalModel.Load('assets/coal1.gltf', 'Factory 1')
+factory_model.scale = 0.4;
+
+
 
 let tree_model = GraphicalModel.Load('assets/tree.gltf', 'Tree 1')
 tree_model.scale = 0.25;
@@ -142,7 +146,7 @@ progress_model.offset = new THREE.Vector3(0,5,0);
 
 
 let game_models = [windMill_model, windMill2_model, coalPower_model, coalPower2_model, tree_model, tree2_model, tree3_model, town_model, 
-	city_model, progress_model, solar_model, solar2_model, fusion1_model];
+	city_model, progress_model, solar_model, solar2_model, fusion1_model, factory_model];
 for(let model of game_models){
 	
 	model.tech = simModels[model.name];
@@ -169,7 +173,7 @@ const aspect = window.innerWidth / window.innerHeight;
 const frustumSize = 30;
 const scene = new THREE.Scene();
 const uiScene = new THREE.Scene();
-const frustumSizeUi = 10;
+const frustumSizeUi = 20;
 const uiCamera = new THREE.OrthographicCamera( frustumSizeUi * aspect / - 2, frustumSizeUi * aspect / 2, frustumSizeUi / 2, frustumSizeUi / - 2, 0.01, 1000 );
 uiCamera.position.y = 10;
 uiCamera.lookAt(new THREE.Vector3(0,0,0));
@@ -311,11 +315,14 @@ let gui_model = {
 	CO2: 500,
 	Temperature: 0.0,
 	Production: 0,
+	Demand: 0,
+	Emission: 0,
 	"Water Level": 0,
 	Capacity: 0,
 	Storage: 0,
 	Consumption: 0,
-	Wind: 0
+	Wind: 0,
+	Income: 0
 
 }
 
@@ -371,7 +378,7 @@ let views = []
 function addView(name){
 	views.push(statsFolder.add(gui_model, name))
 }
-for(name of ["Money", "CO2", "Temperature", "Water Level", "Production", "Storage", "Capacity", "Consumption", "Wind"]){
+for(name of ["Money", "CO2", "Temperature", "Water Level", "Production", "Storage", "Capacity", "Consumption", "Wind", "Demand", "Emission", "Income"]){
 	addView(name)
 }
 statsFolder.open()
@@ -446,6 +453,10 @@ function placeBuilding(placeModel, position){
 		position: newModel.model.position,
 		model: newModel
 	});
+
+	if(placeModel.tech.reduction > 0){
+		sim.co2Level.step(1.0, -placeModel.tech.reduction)
+	}
 
 	buildingsNode.add(newModel.model);
 	mixers.push(newModel.mixer);
@@ -593,8 +604,11 @@ function animate(time) {
 	gui_model.Temperature = sim.temperatureRise.amount
 	gui_model['Water Level'] = sim.waterRise.amount;
 	gui_model['Production'] = sim.production;
+	gui_model['Demand'] = sim.demand;
 	gui_model['Consumption'] = sim.consumption;
 	gui_model['Wind'] = sim.wind;
+	gui_model['Emission'] = sim.emission;
+	gui_model['Income'] = sim.income;
 	gui_model.Money = sim.funds;
 	for(let view of views){
 		view.updateDisplay();
