@@ -35,6 +35,7 @@ class GraphicalModel {
     CreateInstance(){
         let model2 = this.model.clone();
         let mixer = new THREE.AnimationMixer(model2)
+        
         this.animations.forEach((anim) => {
             mixer.clipAction(anim).play();
         });

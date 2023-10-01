@@ -113,7 +113,7 @@ let placeModelInstance = null;
 
 function setPlaceModel(model){
 	if(placeModel != null){
-		scene.remove(placeModelInstance	.model);
+		scene.remove(placeModelInstance.model);
 	}
 	placeModel = model;
 	if(model == null){
@@ -129,6 +129,7 @@ let mixers = [];
 const aspect = window.innerWidth / window.innerHeight;
 const frustumSize = 30;
 const scene = new THREE.Scene();
+
 const camera = new THREE.OrthographicCamera( frustumSize * aspect / - 2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / - 2, 0.01, 1000 );
 
 bmlloader.load('assets/map1-64x64.png', bitmapLoaded);
@@ -149,7 +150,8 @@ waterMaterial.transparent = true;
 const water = new THREE.Mesh(waterGeometry, waterMaterial);
 
 scene.add( water );
-
+const buildingsNode = new THREE.Mesh();
+scene.add(buildingsNode);
 const techTreeUi = new THREE.Mesh();
 const nodeMaterial = new THREE.MeshStandardMaterial( { color: 0x222222 } );
 const selectedNodeMaterial = new THREE.MeshStandardMaterial( { color: 0x66FF66 } );
@@ -280,7 +282,68 @@ for(name of ["Money", "CO2", "Temperature", "Water Level", "Production", "Storag
 	addView(name)
 }
 statsFolder.open()
+const gameStorageKey = "saveGame";
 
+const gameFolder = gui.addFolder('Game');
+function addGameFunction(name, fcn){
+    gui_model[name] = fcn;
+	gameFolder.add(gui_model, name);
+}
+addGameFunction("Save", ()=> {
+	let json = saveToGameStateToJson();
+	
+	localStorage.setItem(gameStorageKey, json);
+});
+
+addGameFunction("Save To Clipboard", ()=> {
+	let json = saveToGameStateToJson();
+	navigator.clipboard.writeText(json);
+	console.log("game state saved to clipboard");
+});
+
+function saveToGameStateToJson(){
+	let gameData = {level: level, tech: Array.from(techTree.acquiredNodes.keys()).map((x) => x.name)};
+	return JSON.stringify(gameData);
+}
+
+function loadFromJson(json){
+	let loaded = JSON.parse(json);
+	level = loaded.level;
+	buildingsNode.clear();
+	mixers = []
+	let lookup = {}
+	for(let model of game_models){
+		lookup[model.name] = model;
+	}
+	for(let x of level){
+		let type = x.type;
+		let pos = x.position;
+		let model = lookup[type.name];
+		let instance = model.CreateInstance();
+		instance.model.position.set(pos.x, pos.y, pos.z);
+		buildingsNode.add(instance.model);
+		mixers.push(instance.mixer);
+	}
+}
+
+addGameFunction("Load", ()=>{
+	let savedGame = localStorage.getItem(gameStorageKey);
+	if(savedGame == null) return;
+	loadFromJson(savedGame);
+});
+
+function placeBuilding(placeModel, position){
+	let newModel = placeModel.CreateInstance();
+	newModel.model.position.set(position.x, position.y, position.z);
+
+	level.push({
+		type: placeModel.tech,
+		position: newModel.model.position
+	});
+
+	buildingsNode.add(newModel.model);
+	mixers.push(newModel.mixer);
+}
 
 function onDocumentMouseDown( event ) {
 	if (event.target.localName != "canvas") {
@@ -304,18 +367,7 @@ function onDocumentMouseDown( event ) {
 		return;
 	}
 	if(placeModel != null){
-		let newModel = placeModel.CreateInstance();
-		newModel.model.position.x =placeModelInstance.model.position.x;
-		newModel.model.position.y =placeModelInstance.model.position.y;
-		newModel.model.position.z =placeModelInstance.model.position.z;
-
-		level.push({
-			type: placeModel.tech,
-			position: newModel.model.position
-		});
-
-		scene.add(newModel.model);
-		mixers.push(newModel.mixer);
+		placeBuilding(placeModel, placeModelInstance.model.position);
 		setPlaceModel(null);
 	}
   
@@ -384,6 +436,7 @@ function animate(time) {
 	requestAnimationFrame( animate );
 	renderer.render( scene, camera );
 	water.position.y = sim.waterLevel;
+	
 	mixers.forEach((mixer) => mixer.update(delta))
 	
 	controls.update();
