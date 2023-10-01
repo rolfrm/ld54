@@ -51,7 +51,7 @@ function GameTech(){
     const wind2 = Object.assign(new TechNode, {name: "Wind 2", requirements: [wind, materialPhysics], cost: 200, pos: [2,-1], unlocks: ["Wind Mill 2"]});
     const wind3 = Object.assign(new TechNode, {name: "Wind 3", requirements: [wind2], cost: 400, pos: [3,-1], unlocks: ["Wind Mill 3"]});
     const semiConductor = Object.assign(new TechNode, {name: "Semi Conductor", requirements: [materialPhysics], cost: 400, pos: [3,1]});
-    const solarCells = Object.assign(new TechNode, {name: "Solar", requirements: [semiConductor], cost: 400, pos: [4,2], unlocks: ["Solar 1"]});
+    const solarCells = Object.assign(new TechNode, {name: "Solar", requirements: [semiConductor], cost: 400, pos: [4,2], unlocks: ["Solar Panels 1"]});
     const ecology1 = Object.assign(new TechNode, {name: "Ecology 1", requirements: [coal1], cost: 50, pos: [0,3], unlocks: ["Tree 1"]});
     const ecology2 = Object.assign(new TechNode, {name: "Ecology 2", requirements: [ecology1], cost: 100, pos: [1,3], unlocks: ["Tree 2"]});
     const ecology3 = Object.assign(new TechNode, {name: "Ecology 3", requirements: [ecology2], cost: 200, pos: [2,3], unlocks: ["Tree 3"]});
