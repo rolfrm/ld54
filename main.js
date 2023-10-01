@@ -140,7 +140,8 @@ const aspect = window.innerWidth / window.innerHeight;
 const frustumSize = 30;
 const scene = new THREE.Scene();
 const uiScene = new THREE.Scene();
-const uiCamera = new THREE.OrthographicCamera( frustumSize * aspect / - 2, frustumSize * aspect / 2, frustumSize / 2, frustumSize / - 2, 0.01, 1000 );
+const frustumSizeUi = 10;
+const uiCamera = new THREE.OrthographicCamera( frustumSizeUi * aspect / - 2, frustumSizeUi * aspect / 2, frustumSizeUi / 2, frustumSizeUi / - 2, 0.01, 1000 );
 uiCamera.position.y = 10;
 uiCamera.lookAt(new THREE.Vector3(0,0,0));
 const uiLight = new THREE.AmbientLight(0xFFFFFF, 1.0);
@@ -297,12 +298,39 @@ for(let x of game_models){
 
 const gui = new GUI.GUI()
 
-const cubeFolder = gui.addFolder('Build')
-for(let x of game_models){
-	cubeFolder.add(gui_model, x.name);
+const buildFolder = gui.addFolder('Build')
+
+function updateBuildFolder(){
+	if(buildFolder.clear != undefined){
+		buildFolder.clear() 
+	}
+	let items = []
+	let unlockedTech = {}
+	for(let x of techTree.acquiredNodes.keys()){
+		for(let unlocked of x.unlocks){
+			unlockedTech[unlocked] = true;
+		}
+	}
+	for(let modl of game_models){
+		if(unlockedTech[modl.name] == true || unlockedTech["*"] == true){
+			let item = buildFolder.add(gui_model, modl.name);
+			items.push(item)
+		}
+	}
+	buildFolder.clear = ()=>{
+		for(let item of items){
+			buildFolder.remove(item);
+		}
+	}
 
 }
-cubeFolder.open()
+updateBuildFolder();
+/*
+for(let x of game_models){
+	buildFolder.add(gui_model, x.name);
+
+}*/
+buildFolder.open()
 const techFolder = gui.addFolder('Tech')
 
 const statsFolder = gui.addFolder('Stats');
@@ -406,6 +434,7 @@ function onDocumentMouseDown( event ) {
 		highLightedNode.buy = () => {
 			if(sim.funds > thisnode.cost){
 				techTree.AcquireTech(thisnode);
+				updateBuildFolder();
 				sim.funds -= thisnode.cost;
 			}else{
 				alert("Insufficient funds.")
