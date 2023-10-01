@@ -102,6 +102,11 @@ let tree_model = GraphicalModel.Load('assets/tree.gltf', 'Tree 1')
 tree_model.scale = 0.25;
 tree_model.offset = new THREE.Vector3(-0.1,0.5,-0.1);
 
+let tree2_model = GraphicalModel.Load('assets/tree3.gltf', 'Tree 2')
+tree2_model.scale = 0.44;
+let tree3_model = GraphicalModel.Load('assets/tree_large.gltf', 'Tree 3')
+tree3_model.scale = 0.44;
+
 let town_model = GraphicalModel.Load('assets/town.gltf', 'Town 1')
 town_model.scale = 0.3;
 //town_model.offset = new THREE.Vector3(-0.1,0.5,-0.1);
@@ -113,7 +118,7 @@ let progress_model = GraphicalModel.Load('assets/progressbar.gltf', 'Progress 1'
 progress_model.offset = new THREE.Vector3(0,5,0);
 
 
-let game_models = [windMill_model, windMill2_model, coalPower_model, coalPower2_model, tree_model, town_model, city_model, progress_model];
+let game_models = [windMill_model, windMill2_model, coalPower_model, coalPower2_model, tree_model, tree2_model, tree3_model, town_model, city_model, progress_model];
 for(let model of game_models){
 	
 	model.tech = simModels[model.name];
@@ -246,8 +251,8 @@ directionalLight.shadow.camera.right = 30;
 directionalLight.shadow.camera.left = -30;
 directionalLight.shadow.camera.top	= 30;
 directionalLight.shadow.camera.bottom = -30;
-directionalLight.shadow.mapSize.width = 1024;
-directionalLight.shadow.mapSize.height = 1024;
+directionalLight.shadow.mapSize.width = 2 * 1024;
+directionalLight.shadow.mapSize.height = 2 * 1024;
 directionalLight.shadow.radius = 1.0;
 directionalLight.shadow.bias = -0.0005;
 

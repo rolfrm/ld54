@@ -117,7 +117,7 @@ class WorldSimulator {
         // CO2 + Temperature + Water level
         this.co2Level.step(hourDiff, emissionsNow);
 
-        const tempRise = this.#co2LevelToTempRise(this.co2Level.amount);
+        const tempRise = this.#co2LevelToTempRise(this.co2Level.amount - totalReduction);
         this.temperatureRise.step(hourDiff, tempRise);
         
         this.waterRise.step(hourDiff, this.temperatureRise.amount);

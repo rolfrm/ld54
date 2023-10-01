@@ -19,9 +19,12 @@ function getSimModels(){
     let coalPlant2 = {name: "Coal 2", production: 20.0, cost: 15.0,  emission: 19.0};
     let windmill1 = {name: "Wind Mill 1", production: 1.0, cost: 4.0, emission: 0.0, windDriven: true};
     let windmill2 = {name: "Wind Mill 2", production: 4.0, cost: 8.0, emission: 0.0, windDriven: true};
-    let tree = {name: "Tree 1", production: 0.0, cost: 1.0, reduction: 1.0, emission: -0.1};
+    let tree = {name: "Tree 1", production: 0.0, cost: 1.0, reduction: 1.0, emission: -0.5};
+    let tree2 = {name: "Tree 2", production: 0.0, cost: 4.0, reduction: 5.0, emission: -1.3};
+    let tree3 = {name: "Tree 3", production: 0.0, cost: 20.0, reduction: 40.0, emission: -3.9};
 
-    let result = [town, city, coalPlant1, windmill1, windmill2, coalPlant2, tree].map((item) => Object.assign(new SimModel, item))
+    let result = [town, city, coalPlant1, windmill1, windmill2, coalPlant2, tree, tree2, tree3]
+        .map((item) => Object.assign(new SimModel, item))
     let resultObject = {};
     for(let r of result){
         resultObject[r.name] = r;

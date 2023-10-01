@@ -51,13 +51,13 @@ function GameTech(){
     const wind2 = Object.assign(new TechNode, {name: "Wind 2", requirements: [wind, materialPhysics], cost: 200, pos: [2,-1], unlocks: ["Wind Mill 2"]});
     const wind3 = Object.assign(new TechNode, {name: "Wind 3", requirements: [wind2], cost: 400, pos: [3,-1], unlocks: ["Wind Mill 3"]});
     const semiConductor = Object.assign(new TechNode, {name: "Semi Conductor", requirements: [materialPhysics], cost: 400, pos: [3,1]});
-    const solarCells = Object.assign(new TechNode, {name: "Solar", requirements: [semiConductor], cost: 400, pos: [4,2]});
-    const ecology1 = Object.assign(new TechNode, {name: "Ecology 1", requirements: [coal1], cost: 50, pos: [0,3]});
-    const ecology2 = Object.assign(new TechNode, {name: "Ecology 2", requirements: [ecology1], cost: 100, pos: [1,3]});
-    const ecology3 = Object.assign(new TechNode, {name: "Ecology 3", requirements: [ecology2], cost: 200, pos: [2,3]});
-    const fusion1 = Object.assign(new TechNode, {name: "Fusion 1", requirements: [solarCells], cost: 1000, pos: [4,4]});
-    const fusion2 = Object.assign(new TechNode, {name: "Fusion 2", requirements: [fusion1], cost: 2000, pos: [5,4]});
-    const fusion3 = Object.assign(new TechNode, {name: "Fusion 3", requirements: [fusion2], cost: 4000, pos: [6,4]});
+    const solarCells = Object.assign(new TechNode, {name: "Solar", requirements: [semiConductor], cost: 400, pos: [4,2], unlocks: ["Solar 1"]});
+    const ecology1 = Object.assign(new TechNode, {name: "Ecology 1", requirements: [coal1], cost: 50, pos: [0,3], unlocks: ["Tree 1"]});
+    const ecology2 = Object.assign(new TechNode, {name: "Ecology 2", requirements: [ecology1], cost: 100, pos: [1,3], unlocks: ["Tree 2"]});
+    const ecology3 = Object.assign(new TechNode, {name: "Ecology 3", requirements: [ecology2], cost: 200, pos: [2,3], unlocks: ["Tree 3"]});
+    const fusion1 = Object.assign(new TechNode, {name: "Fusion 1", requirements: [solarCells], cost: 1000, pos: [4,4], unlocks: ["Fusion Plant 1"]});
+    const fusion2 = Object.assign(new TechNode, {name: "Fusion 2", requirements: [fusion1], cost: 2000, pos: [5,4], unlocks: ["Fusion Plant 2"]});
+    const fusion3 = Object.assign(new TechNode, {name: "Fusion 3", requirements: [fusion2], cost: 4000, pos: [6,4], unlocks: ["Fusion Plant 3"]});
 
     return new TechTree([everything, coal1, coal2, materialPhysics, coal3, wind, wind2, wind3, semiConductor, solarCells, ecology1, ecology2, ecology3,
     fusion1, fusion2, fusion3]);
