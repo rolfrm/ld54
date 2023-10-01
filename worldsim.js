@@ -51,6 +51,7 @@ class WorldSimulator {
 
     /// Environment
     waterLevel = 0.0;
+    waterLevelTarget = 0.0;
     temperatureRise = null;
     co2Level = null;
     wind = 0.0;
@@ -120,8 +121,8 @@ class WorldSimulator {
         const tempRise = this.#co2LevelToTempRise(this.co2Level.amount - totalReduction);
         this.temperatureRise.step(hourDiff, tempRise);
         
-        this.waterRise.step(hourDiff, this.temperatureRise.amount);
-        this.waterLevel = this.#startWaterLevel + this.waterRise.amount * 0.02;
+        this.waterRise.step(hourDiff, this.temperatureRise.amount * 0.5);
+        this.waterLevelTarget = this.#startWaterLevel + this.waterRise.amount * 0.05;
 
         
         this.adjustedCo2Level = this.co2Level.amount - totalReduction;
@@ -140,6 +141,9 @@ class WorldSimulator {
         if (update) {
             this.#newHour(day, hour, constructions);
         }
+        let localTarget = this.waterLevelTarget + Math.sin(absTime * 0.002) * 0.1;
+        this.waterLevel = this.waterLevel * 0.98 + localTarget * 0.02;
+        
     }
 };
 
