@@ -89,9 +89,8 @@ windMill_model.offset = new THREE.Vector3(1.2 * scaling,1.2 * scaling,-0.2 * sca
 
 let windMill2_model = GraphicalModel.Load('assets/windmill2.gltf', 'Wind Mill 2')
 
-let coalPower_model = GraphicalModel.Load('assets/smoke.gltf', 'Coal 1')
-coalPower_model.scale = 0.4;
-coalPower_model.offset = new THREE.Vector3(-0.4,0.45,-0.35);
+let coalPower_model = GraphicalModel.Load('assets/coal1.gltf', 'Coal 1')
+coalPower_model.scale = 0.5;
 
 let coalPower2_model = GraphicalModel.Load('assets/smoke.gltf', 'Coal 2')
 coalPower2_model.scale = 0.4;
