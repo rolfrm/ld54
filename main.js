@@ -115,12 +115,16 @@ city_model.scale = 0.5;
 
 let solar_model = GraphicalModel.Load('assets/solarpanel.gltf', 'Solar Panels 1')
 solar_model.scale = 0.5;
+let solar2_model = GraphicalModel.Load('assets/solar2.gltf', 'Solar Panels 2')
+solar2_model.scale = 0.5;
+
+
 let progress_model = GraphicalModel.Load('assets/progressbar.gltf', 'Progress 1')
 //progress_model.scale = 0.25;
 progress_model.offset = new THREE.Vector3(0,5,0);
 
 
-let game_models = [windMill_model, windMill2_model, coalPower_model, coalPower2_model, tree_model, tree2_model, tree3_model, town_model, city_model, progress_model, solar_model];
+let game_models = [windMill_model, windMill2_model, coalPower_model, coalPower2_model, tree_model, tree2_model, tree3_model, town_model, city_model, progress_model, solar_model, solar2_model];
 for(let model of game_models){
 	
 	model.tech = simModels[model.name];
