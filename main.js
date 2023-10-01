@@ -497,7 +497,25 @@ function onDocumentMouseDown( event ) {
   }
 
   document.addEventListener( 'mousedown', onDocumentMouseDown, false );
+
+  function onWindowResize() {
+	const aspect = window.innerWidth / window.innerHeight;
+
+	for (let cam of [camera, uiCamera]) {
+		let frustumSize2 = (cam == camera) ? frustumSize : frustumSizeUi;
+
+		cam.left = - frustumSize2 * aspect / 2;
+		cam.right = frustumSize2 * aspect / 2;
+		cam.top = frustumSize2 / 2;
+		cam.bottom = - frustumSize2 / 2;
+
+		cam.updateProjectionMatrix();
+	}
+
+	renderer.setSize( window.innerWidth, window.innerHeight );
+  }
     
+  window.addEventListener( 'resize', onWindowResize );
 
 let sim = new WorldSimulator(64, 64, {});
 const clock = new THREE.Clock();
