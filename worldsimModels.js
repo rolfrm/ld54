@@ -28,7 +28,7 @@ function getSimModels(){
     let windmill2 = {name: "Wind Mill 2", production: 15.0, cost: 100.0, emission: 0.0, windDriven: true};
     let tree = {name: "Tree 1", production: 0.0, cost: 1.0, reduction: 10.0, emission: -0.05};
     let tree2 = {name: "Tree 2", production: 0.0, cost: 10.0, reduction: 20.0, emission: -0.13};
-    let tree3 = {name: "Tree 3", production: 0.0, cost: 200.0, reduction: 400.0, emission: -0.39};
+    let tree3 = {name: "Tree 3", production: 0.0, cost: 200.0, reduction: 200.0, emission: -0.39};
 
     let solar = {name: "Solar Panels 1", cost: 10.0, production: 6.0, sunDriven: true};
     let solar2 = {name: "Solar Panels 2",  cost: 30.0, production: 30.0, sunDriven: true};

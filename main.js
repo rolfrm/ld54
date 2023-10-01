@@ -112,7 +112,7 @@ let coalPower2_model = GraphicalModel.Load('assets/smoke.gltf', 'Coal 2')
 coalPower2_model.scale = 0.4;
 coalPower2_model.offset = new THREE.Vector3(-0.4,0.45,-0.35);
 
-let factory_model = GraphicalModel.Load('assets/coal1.gltf', 'Factory 1')
+let factory_model = GraphicalModel.Load('assets/Factory.gltf', 'Factory 1')
 factory_model.scale = 0.4;
 
 
@@ -141,6 +141,9 @@ fusion1_model.scale = 0.5;
 let fusion2_model = GraphicalModel.Load('assets/fusion2.gltf', 'Fusion Plant 2')
 fusion2_model.scale = 0.5;
 
+let fusion3_model = GraphicalModel.Load('assets/fusion2.gltf', 'Fusion Plant 2')
+fusion3_model.scale = 0.5;
+
 let capture1_model = GraphicalModel.Load('assets/fusion2.gltf', 'Carbon Capture 1')
 capture1_model.scale = 0.5;
 let capture2_model = GraphicalModel.Load('assets/fusion2.gltf', 'Carbon Capture 2')
@@ -153,7 +156,7 @@ progress_model.offset = new THREE.Vector3(0,5,0);
 
 
 let game_models = [windMill_model, windMill2_model, coalPower_model, coalPower2_model, tree_model, tree2_model, tree3_model, town_model, 
-	city_model, progress_model, solar_model, solar2_model, fusion1_model, fusion2_model, factory_model, capture1_model, capture2_model];
+	city_model, progress_model, solar_model, solar2_model, fusion1_model, fusion2_model, fusion3_model, factory_model, capture1_model, capture2_model];
 for(let model of game_models){
 	
 	model.tech = simModels[model.name];

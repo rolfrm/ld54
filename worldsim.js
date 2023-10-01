@@ -78,6 +78,8 @@ class WorldSimulator {
         return (level - 450) / 100;
     }
 
+    solarPower = [0,0,0,0,0,0.1,0.3,0.5,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,0.7,0.5,0.3, 0.0]
+
     #newHour(day, hour, constructions) {
         let hourDiff = (day * 24 + hour) - (this.#lastDay * 24 + this.#lastHour);
 
@@ -112,6 +114,9 @@ class WorldSimulator {
             totalReduction += construction.type.reduction;
             if(type.windDriven){
                 this.production += construction.type.production * Math.min(1.0, this.wind);
+            }else if(type.sunDriven){
+                this.production += construction.type.production * this.solarPower[hour + 12];
+                
             }else{
                 this.production += construction.type.production;
             }
@@ -129,6 +134,9 @@ class WorldSimulator {
             totalReduction += construction.type.reduction;
             if(type.windDriven){
                 this.production += construction.type.production * Math.min(1.0, this.wind);
+            }else if(type.sunDriven){
+                this.production += construction.type.production * this.solarPower[hour + 12];
+                
             }else{
                 this.production += construction.type.production;
             }
